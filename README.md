@@ -2,7 +2,7 @@
 
 Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
 
-
+</br>
 
 ### How to Run
 
@@ -12,9 +12,7 @@ python train.py
 
 that's it.
 
-
-
-
+</br>
 
 ### Reference
 
@@ -32,7 +30,5 @@ that's it.
 ```
 
 [review_page](https://github.com/CUN-bjy/pg-paper-review/blob/master/reviews/DDPG.md) | [paper_link](https://arxiv.org/pdf/1509.02971.pdf)
-
-
 
 [2] [stevenpjg/ddpg-aigym](https://github.com/stevenpjg/ddpg-aigym)
