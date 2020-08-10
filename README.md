@@ -4,7 +4,7 @@ Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwor
 
 
 
-#### How to Run
+### How to Run
 
 ```python
 python train.py
