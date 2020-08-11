@@ -30,11 +30,10 @@ class ddpgAgent():
 	def __init__(self, Env):
 		self.env = Env
 
-		self.act_nn = ActorNet()
-		self.crit_nn = CriticNet()
+		# initialize actor & critic and its targets
+		self.act_nn, self.crit_nn = ActorNet(), CriticNet()
+		self.target_act_nn, self.target_crit_nn = ActorNet(), CriticNet()
 
-		self.target_act_nn = ActorNet()
-		self.target_crit_nn = CriticNet()
 
 
 	def __del__(self):

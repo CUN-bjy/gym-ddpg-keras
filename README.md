@@ -26,3 +26,5 @@ Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwor
 
 
 [2] [stevenpjg/ddpg-aigym](https://github.com/stevenpjg/ddpg-aigym)
+
+[3] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)

@@ -22,8 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+
 class ActorNet():
-	def __init__(self):
-		pass
+	def __init__(self, num_obs, num_act):
+
+		self.model = keras.Sequential(
+			[
+				layers.Input(shape=(num_obs,))
+				layers.Dense(400, activation="softplus", name='layer1'),
+				layers.Dense(300, activation="tanh", name='layer2')
+				layers.Dense(num_act, name="actions")
+			])
+
+		self.model.compile(
+			optimizer='adam', #loss='',
+			metrics=['accuracy']
+			)
+
 	def __del__(self):
 		pass
+
+
+# for test
+if __name__ == '__main__':
+	actor = ActorNet()
