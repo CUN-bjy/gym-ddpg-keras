@@ -29,7 +29,7 @@ SOFTWARE.
 import roboschool
 import gym
 
-from agent import ddpgAgent
+from agent.ddpg import ddpgAgent
 
 NUM_EPISODES_ = 1000
 
@@ -61,7 +61,7 @@ def main():
 			env.render()
 			
 			#your agent goes here
-			action = env.action_space.sample()#agent.make_action()
+			action = agent.make_action()#env.action_space.sample()#
 
 			observation, reward, done, info = env.step(action) 
 			

@@ -22,14 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+from actor import ActorNet
+from critic import CriticNet
+
+
 class ddpgAgent():
 	def __init__(self, Env):
 		self.env = Env
+
+		self.act_nn = ActorNet()
+		self.crit_nn = CriticNet()
+
+		self.target_act_nn = ActorNet()
+		self.target_crit_nn = CriticNet()
+
+
 	def __del__(self):
 		pass
 
 	def make_action(self):
-		self.env.action_space.sample()
+		return self.env.action_space.sample()
 
 	def train(self):
 		pass
