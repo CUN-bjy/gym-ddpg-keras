@@ -1,11 +1,10 @@
 # walkyto-ddpg
 
 Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
-
 </br>
 
 ### How to Run
-
+(environment python 3.6)
 ```python
 python train.py
 ```
