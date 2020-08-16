@@ -21,8 +21,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
+import numpy as np
+import tensorflow as tf
+import keras.backend as K
+
+from keras.initializers import RandomUniform
+from keras.models import Model
+from keras.optimizers import Adam
+from keras.layers import Input, Dense, concatenate, LSTM, Reshape, BatchNormalization, Lambda, Flatten
+
 
 class CriticNet():
+	""" Critic Network for DDPG
+	"""
 	def __init__(self):
 		pass
 	def __del__(self):

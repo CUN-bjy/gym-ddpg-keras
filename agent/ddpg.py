@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-from actor import ActorNet
-from critic import CriticNet
+from .actor import ActorNet
+from .critic import CriticNet
 
 
 class ddpgAgent():
