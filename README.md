@@ -1,7 +1,6 @@
 # walkyto-ddpg
 
 Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
-
 </br>
 
 ### Experiment Details
@@ -29,9 +28,7 @@ layers: 400, 300 for each hidden layer
 </br>
 
 ### How to Run
-
 (environment python 3.6)
-
 ```python
 python train.py
 ```
