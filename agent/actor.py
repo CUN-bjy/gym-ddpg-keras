@@ -28,16 +28,16 @@ import keras.backend as K
 
 from keras.initializers import RandomUniform
 from keras.models import Model
-from keras.layers import Input, Dense, Reshape, LSTM, Lambda, BatchNormalization, GaussianNoise, Flatten
+from keras.layers import Input, Dense, Lambda, GaussianNoise, Flatten
 
 
 class ActorNet():
 	""" Actor Network for DDPG
 	"""
-	def __init__(self, in_dim, out_dim, lr_, tau):
+	def __init__(self, in_dim, out_dim, lr_, tau_):
 		self.obs_dim = in_dim
 		self.act_dim = out_dim
-		self.lr = lr_
+		self.lr = lr_; self.tau = tau_
 
 		# initialize actor network and target
 		self.network = self.create_network()
@@ -80,10 +80,13 @@ class ActorNet():
 		"""
 		self.optimizer([obs,grads])
 
-	def soft_update(self):
+	def target_update(self):
 		""" soft target update for training target actor network
 		"""
-		pass
+		weights, weights_t = self.network.get_weights(), self.target_network.get_weights()
+		for i in range(len(weights)):
+			weights_t[i] = self.tau*weights[i] + (1-self.tau)*weights_t[i]
+		self.target_network.set_weights(weights_t)
 
 	def predict(self):
 		""" predict function for Actor Network
@@ -97,7 +100,7 @@ class ActorNet():
 
 	def save_network(self, path):
 		self.target_network.save_weights(path + '_actor.h5')
-		
+
 	def load_network(self, path):
 		self.target_network.load_weights(path)
 

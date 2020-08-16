@@ -34,7 +34,47 @@ from keras.layers import Input, Dense, concatenate, LSTM, Reshape, BatchNormaliz
 class CriticNet():
 	""" Critic Network for DDPG
 	"""
-	def __init__(self):
+	def __init__(self, in_dim, out_dim, lr_, tau_):
+		self.obs_dim = in_dim
+		self.act_dim = out_dim
+		self.lr = lr_; self.tau = tau_
+
+		# initialize critic network and target
+		self.network = create_network()
+		self.target_network = create_network()
+
+	def create_network(self):
+		""" Create a Critic Network Model using Keras
+			as a Q-value approximator function
+		"""
 		pass
-	def __del__(self):
+
+	def gradients(self):
+		"""
+		"""
 		pass
+
+
+	def train_on_batch(self):
+		"""
+		"""
+		pass
+
+	def target_predict(self):
+		"""
+		"""
+		pass
+
+	def target_update(self):
+		""" soft target update for training target critic network
+		"""
+		weights, weights_t = self.network.get_weights(), self.target_network.get_weights()
+		for i in range(len(weights)):
+			weights_t[i] = self.tau*weights[i] + (1-self.tau)*weights_t[i]
+		self.target_network.set_weights(weights_t)
+
+	def save_network(self, path):
+		self.target_network.save_weights(path + '_critic.h5')
+
+	def load_network(self, path):
+		self.target_network.load_weights(path)
