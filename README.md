@@ -12,19 +12,13 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 
 **abstract**
 
-optimizer : Adam
-
-learning rate: 10-4 ~ 10-3
-
-weight decay: 10-2 (for regularization)
-
-discount factor: 0.99
-
-tau : 0.001 (for soft target update)
-
-activation : ReLU(for hidden layer), tanh(for output layer)
-
-layers: 400, 300 for each hidden layer
+- optimizer : Adam
+- learning rate: 10-4 ~ 10-3
+- weight decay: 10-2 (for regularization)
+- discount factor: 0.99
+- tau : 0.001 (for soft target update)
+- activation : ReLU(for hidden layer), tanh(for output layer)
+- layers: 400, 300 for each hidden layer
 </br>
 
 ### How to Run
