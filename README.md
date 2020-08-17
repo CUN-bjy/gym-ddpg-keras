@@ -3,6 +3,9 @@
 Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
 </br>
 
+## Environment
+WalkYTo-rl : [link](https://github.com/CUN-bjy/WalkYTo-rl)
+
 ## Experiment Details
 
 ### **from paper**
