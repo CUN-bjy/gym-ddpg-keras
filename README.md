@@ -1,6 +1,8 @@
 # walkyto-ddpg
 
 Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
+
+**This project is not totally implemented,yet.**
 </br>
 
 ## Environment
