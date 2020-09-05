@@ -1,4 +1,4 @@
-# walkyto-ddpg
+# walkyto-ddpg-keras
 
 Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
 
