@@ -26,9 +26,9 @@ import numpy as np
 import tensorflow as tf
 import keras.backend as K
 
-from keras.initializers import RandomUniform
+from keras.initializers import GlorotNormal
 from keras.models import Model
-from keras.layers import Input, Dense, Lambda, GaussianNoise, Flatten
+from keras.layers import Input, Dense, BatchNormalization, Activation
 
 
 class ActorNet():
@@ -55,15 +55,21 @@ class ActorNet():
 		input_ = Input(shape=(self.obs_dim,))
 
 		# hidden layer 1
-		h1 = Dense(300, activation='relu')(input_)
-		
-		# hidden_layer 2
-		h2 = Dense(400, activation='relu')(h1)
-		
-		# output layer(actions)
-		output_ = Dense(self.act_dim, activation='tanh')(h2)
+		h1_ = Dense(300, kernel_initializer=GlorotNormal())(input_)
+		h1_b = BatchNormalization()(h1_)
+		h1 = Activation('relu')(h1_b)
 
-		return Model(input_,output_)
+		# hidden_layer 2
+		h2_ = Dense(400, kernel_initializer=GlorotNormal())(h1)
+		h2_b = BatchNormalization()(h2_)
+		h2 = Activation('relu')(h2_b)
+
+		# output layer(actions)
+		output_ = Dense(self.act_dim, kernel_initializer=GlorotNormal())(h2)
+		output_b = BatchNormalization()(output_)
+		output = Activation('tanh')(output_b)
+
+		return Model(input_,output)
 
 	def create_optimizer(self):
 		""" Create a optimizer for updating network
@@ -88,15 +94,15 @@ class ActorNet():
 			weights_t[i] = self.tau*weights[i] + (1-self.tau)*weights_t[i]
 		self.target_network.set_weights(weights_t)
 
-	def predict(self):
+	def predict(self, obs):
 		""" predict function for Actor Network
 		"""
-		pass
+		return self.network.predict(np.expand_dims(obs, axis=0))
 
-	def target_predict(self):
+	def target_predict(self, new_obs):
 		"""  predict function for Target Actor Network
 		"""
-		pass
+		return self.target_network.predict(new_obs)
 
 	def save_network(self, path):
 		self.target_network.save_weights(path + '_actor.h5')

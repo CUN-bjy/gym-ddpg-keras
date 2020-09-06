@@ -25,45 +25,82 @@ import numpy as np
 import tensorflow as tf
 import keras.backend as K
 
-from keras.initializers import RandomUniform
+from keras.initializers import GlorotNormal
 from keras.models import Model
 from keras.optimizers import Adam
-from keras.layers import Input, Dense, concatenate, LSTM, Reshape, BatchNormalization, Lambda, Flatten
+from keras.regularizers import l2
+from keras.layers import Input, Dense, concatenate, Activation, BatchNormalization
 
 
 class CriticNet():
 	""" Critic Network for DDPG
 	"""
-	def __init__(self, in_dim, out_dim, lr_, tau_):
+	def __init__(self, in_dim, out_dim, lr_, tau_, discount_factor):
 		self.obs_dim = in_dim
 		self.act_dim = out_dim
-		self.lr = lr_; self.tau = tau_
+		self.lr = lr_; self.discount_factor=discount_factor;self.tau = tau_
 
 		# initialize critic network and target
-		self.network = create_network()
-		self.target_network = create_network()
+		self.network = create_network(); self.network.compile(Adam(lr=self.lr),'mse')
+		self.target_network = create_network(); self.target_network.compile(Adam(lr=self.lr),'mse')
+
+		# Q-value gradients for Actor Optimization
+		self.Q_grads = K.function([self.network.input[0],self.network.input[1]], K.gradients(self.network.output,[self.network.input[1]]))
+
 
 	def create_network(self):
 		""" Create a Critic Network Model using Keras
 			as a Q-value approximator function
 		"""
-		pass
+		# input layer(observations and actions)
+		input_obs = Input(shape=(self.obs_dim,))
+		input_act = Input(shape=(self.act_dim,))
+		input_ = concatenate([input_obs,input_act])
 
-	def gradients(self):
-		"""
-		"""
-		pass
+		# hidden layer 1
+		h1_ = Dense(300, kernel_initializer=GlorotNormal(), kernel_regularizer=regularizers.l2(0.01))(input_)
+		h1_b = BatchNormalization()(h1_)
+		h1 = Activation('relu')(h1_b)
+
+		# hidden_layer 2
+		h2_ = Dense(400, kernel_initializer=GlorotNormal(), kernel_regularizer=regularizers.l2(0.01))(h1)
+		h2_b = BatchNormalization()(h2_)
+		h2 = Activation('relu')(h2_b)
+
+		# output layer(actions)
+		output_ = Dense(1, kernel_initializer=GlorotNormal())(h2)
+		output_b = BatchNormalization()(output_)
+		output = Activation('linear')(output_b)
+
+		return Model(input_,output_)
 
 
-	def train_on_batch(self):
+	def gradients(self, obs, acts):
+		"""Compute Q-value Gradients
 		"""
-		"""
-		pass
+		return self.Q_grads([obs,acts])
 
-	def target_predict(self):
+	def bellman(self, rewards, q_vals, dones):
+		""" Bellman Equation for q value iteration
 		"""
+		critic_target = np.asarray(q_vals)
+		for i in range(q_vals.shape[0]):
+			if dones[i]:
+				critic_target[i] = rewards[i]
+			else:
+				critic_target[i] = rewards[i] + self.discount_factor * q_vals[i]
+		return critic_target
+
+
+	def train_on_batch(self, obs, acts, target):
+		"""Train Q-network for critic on sampled batch
 		"""
-		pass
+		return self.network.train_on_batch([obs,acts],target)
+
+	def target_predict(self, new_obs):
+		"""Predict Q-value from approximation function(Q-network)
+		"""
+		return self.target_network.predict(new_obs)
 
 	def target_update(self):
 		""" soft target update for training target critic network

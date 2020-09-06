@@ -53,6 +53,6 @@ that's it.
 
 [review_page](https://github.com/CUN-bjy/pg-paper-review/blob/master/reviews/DDPG.md) | [paper_link](https://arxiv.org/pdf/1509.02971.pdf)
 
-[2] [stevenpjg/ddpg-aigym](https://github.com/stevenpjg/ddpg-aigym)
+[2] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)
 
-[3] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)
+[3] [Deep Deterministic Policy Gradient (DDPG): Theory and Implementation](https://towardsdatascience.com/deep-deterministic-policy-gradient-ddpg-theory-and-implementation-747a3010e82f)

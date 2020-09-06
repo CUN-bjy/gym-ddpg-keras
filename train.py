@@ -26,12 +26,13 @@ SOFTWARE.
 # on WalkYTo-rl framwork
 
 
-import roboschool
-import gym
+import roboschool, gym
+import numpy as np
 
 from agent.ddpg import ddpgAgent
 
 NUM_EPISODES_ = 1000
+BATCH_SIZE = 10000
 
 def main():
 	# Create Environments
@@ -52,22 +53,39 @@ def main():
 	print("max_steps_per_episode: %d"%steps)
 	print("======================================")
 
+
+	act_range = env.action_space.high
 	for epi in range(NUM_EPISODES_):
 		print("=========EPISODE # %d =========="%epi)
-		observation = env.reset()
+		obs = env.reset()
+		actions, states, rewards, dones, new_states = [],[],[],[],[]
+
 		epi_reward = 0
 		for t in range(steps):
 			# environment rendering on Graphics
 			env.render()
 			
-			#your agent goes here
-			action = agent.make_action()#env.action_space.sample()#
+			# Make action from the current policy
+			action_ = agent.make_action(obs)#env.action_space.sample()#
+			action = np.clip(action_ + agent.noise.generate(t), -act_range, act_range)
 
-			observation, reward, done, info = env.step(action) 
+			# do step on gym at t-time
+			new_obs, reward, done, info = env.step(action) 
 			
-			# train the agent's brain
-			agent.train()
+			# store the results to buffer
+			agent.memorize(obs, action, reward, done, new_obs)
+			# sample from buffer
+			states, actions, rewards, dones, new_states, _ = agent.sample_batch(BATCH_SIZE)
+			# get target q-value using target network
+			q_vals = agent.critic.target_predict([new_states,agent.actor.target_predict(new_states)])
+			# bellman iteration for target critic value
+			critic_target = agent.critic.bellman(rewards, q_vals, dones)
 
+			# train(or update) the actor & critic and target networks
+			agent.update_networks(states, actions, critic_target)
+
+			# grace finish and go to t+1 time
+			obs = new_obs
 			epi_reward = epi_reward + reward
 
 			# check if the episode is finished
