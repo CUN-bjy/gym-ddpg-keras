@@ -46,7 +46,7 @@ class ActorNet():
 		self.target_network = self.create_network()
 
 		# initialize optimizer
-		self.optimizer = Adam(self.lr)#self.create_optimizer()
+		self.optimizer = Adam(self.lr)
 
 
 	def create_network(self):
@@ -74,18 +74,6 @@ class ActorNet():
 
 		return Model(input_,out)
 
-	def create_optimizer(self):
-		""" Create a optimizer for updating network
-			to the optimal direction 
-		""" 
-		action_gdts = K.placeholder(shape=(None,self.act_dim))
-		with tf.GradientTape() as t:
-			t.watch(action_gdts)
-		params_grad = t.gradient(self.network.output, self.network.trainable_weights, -action_gdts)
-		grads = zip(params_grad, self.network.trainable_weights)
-		return K.function([self.network.input, action_gdts],[Adam(self.lr).apply_gradients(grads)])
-
-
 	def train(self, obs, acts, critic):
 		""" training Actor's Weights
 		"""
@@ -95,7 +83,6 @@ class ActorNet():
 		
 		actor_grad = tape.gradient(actor_loss, self.network.trainable_weights)
 		self.optimizer.apply_gradients(zip(actor_grad,self.network.trainable_weights))
-		#self.optimizer([obs,grads])
 
 	def target_update(self):
 		""" soft target update for training target actor network

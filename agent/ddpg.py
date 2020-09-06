@@ -64,11 +64,9 @@ class ddpgAgent():
 
 		# get next action and Q-value Gradient
 		actions = self.actor.network.predict(obs)
-		#grads = self.critic.gradients(obs,actions)
 
 		# update actor
-		#self.actor.train(obs,actions, np.array(grads).reshape((-1,self.act_dim)))
-		self.actor.train(obs,actions,self.critic.network,)
+		self.actor.train(obs,actions,self.critic.network)
 
 		# update target networks
 		self.actor.target_update()

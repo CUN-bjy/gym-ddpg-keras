@@ -44,10 +44,6 @@ class CriticNet():
 		self.network = self.create_network(); self.network.compile(Adam(lr=self.lr),'mse')
 		self.target_network = self.create_network(); self.target_network.compile(Adam(lr=self.lr),'mse')
 
-		# Q-value gradients for Actor Optimization
-		#self.Q_grads = K.function([self.network.input[0],self.network.input[1]], K.gradients(self.network.output,[self.network.input[1]]))
-
-
 	def create_network(self):
 		""" Create a Critic Network Model using Keras
 			as a Q-value approximator function
@@ -74,12 +70,6 @@ class CriticNet():
 		output = Activation('linear')(output_b)
 
 		return Model(inputs,output)
-
-
-	def gradients(self, obs, acts):
-		"""Compute Q-value Gradients
-		"""
-		return self.Q_grads([obs,acts])
 
 	def bellman(self, rewards, q_vals, dones):
 		""" Bellman Equation for q value iteration
