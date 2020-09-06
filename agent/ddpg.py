@@ -54,8 +54,7 @@ class ddpgAgent():
 	def make_action(self, obs):
 		""" predict next action from Actor's Policy
 		"""
-		print("@@@@@@@@@",len(obs), self.actor.obs_dim)
-		return self.actor.network.predict(obs)
+		return self.actor.predict(obs)[0]
 
 	def update_networks(self, obs, acts, critic_target):
 		""" Train actor & critic from sampled experience

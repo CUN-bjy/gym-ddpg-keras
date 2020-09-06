@@ -1,3 +1,4 @@
+import numpy as np
 class OrnsteinUhlenbeckProcess(object):
     """ Ornstein-Uhlenbeck Noise (original code by @slowbull)
     """
