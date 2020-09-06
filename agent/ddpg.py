@@ -40,7 +40,7 @@ class ddpgAgent():
 		self.act_dim = self.env.action_space.shape[0]
 
 		# initialize actor & critic and its targets
-		self.actor = ActorNet(self.obs_dim, self.act_dim, lr_=10e-4,tau_=10e-3)
+		self.actor = ActorNet(self.obs_dim, self.act_dim, self.env.action_space.high, lr_=10e-4,tau_=10e-3)
 		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=0.99)
 
 		# Experience Buffer
@@ -51,10 +51,11 @@ class ddpgAgent():
 	###################################################
 	# Network Related
 	###################################################
-	def make_action(self):
+	def make_action(self, obs):
 		""" predict next action from Actor's Policy
 		"""
-		return self.env.action_space.sample()
+		print("@@@@@@@@@",len(obs), self.actor.obs_dim)
+		return self.actor.network.predict(obs)
 
 	def update_networks(self, obs, acts, critic_target):
 		""" Train actor & critic from sampled experience
@@ -64,11 +65,12 @@ class ddpgAgent():
 
 		# get next action and Q-value Gradient
 		actions = self.actor.network.predict(obs)
-		grads = self.critic.gradients(obs,actions)
+		#grads = self.critic.gradients(obs,actions)
 
 		# update actor
-		self.actor.train(obs,actions, np.array(grads).reshape((-1,self.act_dim)))
-		
+		#self.actor.train(obs,actions, np.array(grads).reshape((-1,self.act_dim)))
+		self.actor.train(obs,actions,self.critic.network,)
+
 		# update target networks
 		self.actor.target_update()
 		self.critic.target_update()

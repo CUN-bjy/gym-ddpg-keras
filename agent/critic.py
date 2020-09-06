@@ -29,7 +29,7 @@ from keras.initializers import GlorotNormal
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.regularizers import l2
-from keras.layers import Input, Dense, concatenate, Activation, BatchNormalization
+from keras.layers import Input, Dense, Concatenate, Activation, BatchNormalization
 
 
 class CriticNet():
@@ -41,11 +41,11 @@ class CriticNet():
 		self.lr = lr_; self.discount_factor=discount_factor;self.tau = tau_
 
 		# initialize critic network and target
-		self.network = create_network(); self.network.compile(Adam(lr=self.lr),'mse')
-		self.target_network = create_network(); self.target_network.compile(Adam(lr=self.lr),'mse')
+		self.network = self.create_network(); self.network.compile(Adam(lr=self.lr),'mse')
+		self.target_network = self.create_network(); self.target_network.compile(Adam(lr=self.lr),'mse')
 
 		# Q-value gradients for Actor Optimization
-		self.Q_grads = K.function([self.network.input[0],self.network.input[1]], K.gradients(self.network.output,[self.network.input[1]]))
+		#self.Q_grads = K.function([self.network.input[0],self.network.input[1]], K.gradients(self.network.output,[self.network.input[1]]))
 
 
 	def create_network(self):
@@ -55,15 +55,16 @@ class CriticNet():
 		# input layer(observations and actions)
 		input_obs = Input(shape=(self.obs_dim,))
 		input_act = Input(shape=(self.act_dim,))
-		input_ = concatenate([input_obs,input_act])
+		inputs = [input_obs,input_act]
+		concat = Concatenate(axis=-1)(inputs)
 
 		# hidden layer 1
-		h1_ = Dense(300, kernel_initializer=GlorotNormal(), kernel_regularizer=regularizers.l2(0.01))(input_)
+		h1_ = Dense(300, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(concat)
 		h1_b = BatchNormalization()(h1_)
 		h1 = Activation('relu')(h1_b)
 
 		# hidden_layer 2
-		h2_ = Dense(400, kernel_initializer=GlorotNormal(), kernel_regularizer=regularizers.l2(0.01))(h1)
+		h2_ = Dense(400, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(h1)
 		h2_b = BatchNormalization()(h2_)
 		h2 = Activation('relu')(h2_b)
 
@@ -72,7 +73,7 @@ class CriticNet():
 		output_b = BatchNormalization()(output_)
 		output = Activation('linear')(output_b)
 
-		return Model(input_,output_)
+		return Model(inputs,output)
 
 
 	def gradients(self, obs, acts):

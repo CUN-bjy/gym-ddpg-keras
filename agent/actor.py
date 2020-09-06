@@ -28,15 +28,17 @@ import keras.backend as K
 
 from keras.initializers import GlorotNormal
 from keras.models import Model
-from keras.layers import Input, Dense, BatchNormalization, Activation
+from keras.optimizers import Adam
+from keras.layers import Input, Dense, BatchNormalization, Activation, Lambda
 
 
 class ActorNet():
 	""" Actor Network for DDPG
 	"""
-	def __init__(self, in_dim, out_dim, lr_, tau_):
+	def __init__(self, in_dim, out_dim, act_range, lr_, tau_):
 		self.obs_dim = in_dim
 		self.act_dim = out_dim
+		self.act_range = act_range
 		self.lr = lr_; self.tau = tau_
 
 		# initialize actor network and target
@@ -44,7 +46,7 @@ class ActorNet():
 		self.target_network = self.create_network()
 
 		# initialize optimizer
-		self.optimizer = self.create_optimizer()
+		self.optimizer = Adam(self.lr)#self.create_optimizer()
 
 
 	def create_network(self):
@@ -68,23 +70,32 @@ class ActorNet():
 		output_ = Dense(self.act_dim, kernel_initializer=GlorotNormal())(h2)
 		output_b = BatchNormalization()(output_)
 		output = Activation('tanh')(output_b)
+		out = Lambda(lambda i: i * self.act_range)(output)
 
-		return Model(input_,output)
+		return Model(input_,out)
 
 	def create_optimizer(self):
 		""" Create a optimizer for updating network
 			to the optimal direction 
 		""" 
 		action_gdts = K.placeholder(shape=(None,self.act_dim))
-		params_grad = tf.gradients(self.network.output, self.network.trainable_weights, -action_gdts)
+		with tf.GradientTape() as t:
+			t.watch(action_gdts)
+		params_grad = t.gradient(self.network.output, self.network.trainable_weights, -action_gdts)
 		grads = zip(params_grad, self.network.trainable_weights)
-		return K.funciton([self.network.input, action_gdts],[tf.train.AdamOptimizer(self.lr).apply_gradients(grads)])
+		return K.function([self.network.input, action_gdts],[Adam(self.lr).apply_gradients(grads)])
 
 
-	def train(self, obs, grads):
+	def train(self, obs, acts, critic):
 		""" training Actor's Weights
 		"""
-		self.optimizer([obs,grads])
+		with tf.GradientTape() as tape:
+			actions = self.network(obs)
+			actor_loss = -tf.reduce_mean(critic([obs,actions]))
+		
+		actor_grad = tape.gradient(actor_loss, self.network.trainable_weights)
+		self.optimizer.apply_gradients(zip(actor_grad,self.network.trainable_weights))
+		#self.optimizer([obs,grads])
 
 	def target_update(self):
 		""" soft target update for training target actor network

@@ -23,7 +23,7 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 - optimizer : Adam
 - learning rate: 10-4 ~ 10-3
 - weight decay: 10-2 (for regularization)
-- discount factor: 0.99
+- discount factor: 0.99(for q-network)
 - tau : 0.001 (for soft target update)
 - activation : ReLU(for hidden layer), tanh(for output layer)
 - layers: 400, 300 for each hidden layer
@@ -60,4 +60,4 @@ that's it.
 
 [2] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)
 
-[3] [Deep Deterministic Policy Gradient (DDPG): Theory and Implementation](https://towardsdatascience.com/deep-deterministic-policy-gradient-ddpg-theory-and-implementation-747a3010e82f)
+[3] [anita-hu/TF2-RL](https://github.com/anita-hu/TF2-RL)
