@@ -6,7 +6,10 @@ Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl f
 </br>
 
 ## Environment
+
 WalkYTo-rl : [link](https://github.com/CUN-bjy/WalkYTo-rl)
+
+![](https://raw.githubusercontent.com/CUN-bjy/WalkYTo-rl-gym/master/img/ant_v1.png)
 
 ## Experiment Details
 
@@ -24,10 +27,12 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 - tau : 0.001 (for soft target update)
 - activation : ReLU(for hidden layer), tanh(for output layer)
 - layers: 400, 300 for each hidden layer
-</br>
+  </br>
 
 ## How to Run
+
 (environment python 3.6)
+
 ```python
 python train.py
 ```
