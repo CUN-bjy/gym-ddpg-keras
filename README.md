@@ -43,6 +43,7 @@ that's it.
 
 ## Derectory Structure
 ```
+walkyto-ddpg-keras
 ├── agent
 │   ├── actor.py
 │   ├── critic.py
