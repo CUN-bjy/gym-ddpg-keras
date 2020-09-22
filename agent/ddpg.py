@@ -60,7 +60,7 @@ class ddpgAgent():
 		""" Train actor & critic from sampled experience
 		"""
 		# update critic
-		self.critic.train_on_batch(obs, acts, critic_target)
+		self.critic.train(obs, acts, critic_target)
 
 		# get next action and Q-value Gradient
 		actions = self.actor.network.predict(obs)
