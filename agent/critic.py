@@ -41,8 +41,10 @@ class CriticNet():
 		self.lr = lr_; self.discount_factor=discount_factor;self.tau = tau_
 
 		# initialize critic network and target
-		self.network = self.create_network(); self.network.compile(Adam(lr=self.lr),'mse')
-		self.target_network = self.create_network(); self.target_network.compile(Adam(lr=self.lr),'mse')
+		self.network = self.create_network(); #self.network.compile(Adam(lr=self.lr),'mse')
+		self.target_network = self.create_network(); #self.target_network.compile(Adam(lr=self.lr),'mse')
+
+		self.optimizer = Adam(self.lr)
 
 	def create_network(self):
 		""" Create a Critic Network Model using Keras
@@ -83,10 +85,18 @@ class CriticNet():
 		return critic_target
 
 
-	def train_on_batch(self, obs, acts, target):
+	def train(self, obs, acts, target):
 		"""Train Q-network for critic on sampled batch
 		"""
-		return self.network.train_on_batch([obs,acts],target)
+		with tf.GradientTape() as tape:
+			q_values = self.network([obs, acts])
+			td_error = q_values - target
+			critic_loss = tf.reduce_mean(tf.math.square(td_error))
+
+		critic_grad = tape.gradient(critic_loss, self.network.trainable_variables)  # compute critic gradient
+		self.optimizer.apply_gradients(zip(critic_grad, self.network.trainable_variables))
+
+		#return self.network.train_on_batch([obs,acts],target)
 
 	def target_predict(self, new_obs):
 		"""Predict Q-value from approximation function(Q-network)
