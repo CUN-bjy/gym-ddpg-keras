@@ -41,6 +41,24 @@ that's it.
 
 </br>
 
+## Derectory Structure
+```
+walkyto-ddpg-keras
+├── agent
+│   ├── actor.py
+│   ├── critic.py
+│   ├── ddpg.py
+│   └── __init__.py
+├── README.md
+├── train.py
+└── utils
+    ├── __init__.py
+    ├── memory_buffer.py
+    ├── noise_process.py
+    └── sumtree.py
+```
+</br>
+
 ## Reference
 
 [1]
