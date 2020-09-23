@@ -93,11 +93,11 @@ class ddpgAgent():
 	def save_weights(self,path):
 		""" Agent's Weights Saver
 		"""
-		self.actor.save(path+'actor')
-		self.critic.save(path+'critic')
+		self.actor.save_network(path)
+		self.critic.save_network(path)
 
 	def load_weights(self, actor_path, critic_path):
 		""" Agent's Weights Loader
 		"""
-		self.actor.load_weights(actor_path)
-		self.critic.load_weights(critic_path)
+		self.actor.load_network(actor_path)
+		self.critic.load_network(critic_path)

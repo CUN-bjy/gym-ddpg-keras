@@ -27,7 +27,7 @@ SOFTWARE.
 
 
 import roboschool, gym
-import numpy as np, time
+import numpy as np, time, os
 from tqdm import tqdm
 
 from agent.ddpg import ddpgAgent
@@ -55,48 +55,56 @@ def main():
 	print("======================================")
 
 
-	act_range = env.action_space.high
-	for epi in range(NUM_EPISODES_):
-		print("=========EPISODE # %d =========="%epi)
-		obs = env.reset()
-		actions, states, rewards, dones, new_states = [],[],[],[],[]
+	try:
+		act_range = env.action_space.high
+		for epi in range(NUM_EPISODES_):
+			print("=========EPISODE # %d =========="%epi)
+			obs = env.reset()
+			actions, states, rewards, dones, new_states = [],[],[],[],[]
 
-		epi_reward = 0
-		for t in tqdm(range(steps)):
-			# environment rendering on Graphics
-			env.render()
-			
-			# Make action from the current policy
-			action_ = agent.make_action(obs)#env.action_space.sample()#
-			action = np.clip(action_ + agent.noise.generate(t), -act_range, act_range)
-
-			# do step on gym at t-time
-			new_obs, reward, done, info = env.step(action) 
-			
-			# store the results to buffer
-			agent.memorize(obs, action, reward, done, new_obs)
-			# sample from buffer
-			states, actions, rewards, dones, new_states, _ = agent.sample_batch(BATCH_SIZE)
-
-			# get target q-value using target network
-			q_vals = agent.critic.target_predict([new_states,agent.actor.target_predict(new_states)])
-
-			# bellman iteration for target critic value
-			critic_target = agent.critic.bellman(rewards, q_vals, dones)
-
-			# train(or update) the actor & critic and target networks
-			agent.update_networks(states, actions, critic_target)
-
-			# grace finish and go to t+1 time
-			obs = new_obs
-			epi_reward = epi_reward + reward
-
-			# check if the episode is finished
-			if done or (t == steps-1):
-				print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
-				break;
+			epi_reward = 0
+			for t in tqdm(range(steps)):
+				# environment rendering on Graphics
+				env.render()
 				
-	env.close()
+				# Make action from the current policy
+				action_ = agent.make_action(obs)#env.action_space.sample()#
+				action = np.clip(action_ + agent.noise.generate(t), -act_range, act_range)
+
+				# do step on gym at t-time
+				new_obs, reward, done, info = env.step(action) 
+				
+				# store the results to buffer
+				agent.memorize(obs, action, reward, done, new_obs)
+				# sample from buffer
+				states, actions, rewards, dones, new_states, _ = agent.sample_batch(BATCH_SIZE)
+
+				# get target q-value using target network
+				q_vals = agent.critic.target_predict([new_states,agent.actor.target_predict(new_states)])
+
+				# bellman iteration for target critic value
+				critic_target = agent.critic.bellman(rewards, q_vals, dones)
+
+				# train(or update) the actor & critic and target networks
+				agent.update_networks(states, actions, critic_target)
+
+				# grace finish and go to t+1 time
+				obs = new_obs
+				epi_reward = epi_reward + reward
+
+				# check if the episode is finished
+				if done or (t == steps-1):
+					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
+					if epi%10 == 1:
+						path = os.getcwd()+'/'+'walkyto_ddpg_'
+						agent.save_weights(path + 'ep%d'%epi)
+					break;
+	except KeyboardInterrupt as e:
+		print(e)
+	finally:
+		path = os.getcwd()+'/'+'walkyto_ddpg_'
+		agent.save_weights(path +'_temp_')
+		env.close()
 
 if __name__ == '__main__':
 	main()
