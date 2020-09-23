@@ -103,10 +103,13 @@ class ActorNet():
 		return self.target_network.predict(new_obs)
 
 	def save_network(self, path):
-		self.target_network.save_weights(path + '_actor.h5')
+		self.network.save_weights(path + '_actor.h5')
+		self.target_network.save_weights(path +'_actor_t.h5')
 
 	def load_network(self, path):
-		self.target_network.load_weights(path)
+		self.network.load_weights(path + '_actor.h5')
+		self.target_network.load_weights(path + '_actor_t.h5')
+		print(self.network.summary())
 
 
 # for test

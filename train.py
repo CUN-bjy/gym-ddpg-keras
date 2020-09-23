@@ -33,7 +33,7 @@ from tqdm import tqdm
 from agent.ddpg import ddpgAgent
 
 NUM_EPISODES_ = 500
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 
 def main():
 	# Create Environments
@@ -74,7 +74,7 @@ def main():
 				# do step on gym at t-time
 				new_obs, reward, done, info = env.step(action) 
 				
-				# store the results to buffer
+				# store the results to buffer	
 				agent.memorize(obs, action, reward, done, new_obs)
 				# sample from buffer
 				states, actions, rewards, dones, new_states, _ = agent.sample_batch(BATCH_SIZE)

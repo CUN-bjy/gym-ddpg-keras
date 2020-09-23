@@ -112,7 +112,10 @@ class CriticNet():
 		self.target_network.set_weights(weights_t)
 
 	def save_network(self, path):
-		self.target_network.save_weights(path + '_critic.h5')
+		self.network.save_weights(path + '_critic.h5')
+		self.target_network.save_weights(path + '_critic_t.h5')
 
 	def load_network(self, path):
-		self.target_network.load_weights(path)
+		self.network.load_weights(path + '_critic.h5')
+		self.target_network.load_weights(path + '_critic_t.h5')
+		print(self.network.summary())
