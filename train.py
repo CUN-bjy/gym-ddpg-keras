@@ -28,6 +28,7 @@ SOFTWARE.
 
 import roboschool, gym
 import numpy as np, time
+from tqdm import tqdm
 
 from agent.ddpg import ddpgAgent
 
@@ -61,11 +62,9 @@ def main():
 		actions, states, rewards, dones, new_states = [],[],[],[],[]
 
 		epi_reward = 0
-		for t in range(steps):
-			print("---step%d(EP%d)---"%(t,epi))
-			start_t = time.time()
+		for t in tqdm(range(steps)):
 			# environment rendering on Graphics
-			#env.render()
+			env.render()
 			
 			# Make action from the current policy
 			action_ = agent.make_action(obs)#env.action_space.sample()#
@@ -78,27 +77,19 @@ def main():
 			agent.memorize(obs, action, reward, done, new_obs)
 			# sample from buffer
 			states, actions, rewards, dones, new_states, _ = agent.sample_batch(BATCH_SIZE)
-			predict_start = time.time()
+
 			# get target q-value using target network
 			q_vals = agent.critic.target_predict([new_states,agent.actor.target_predict(new_states)])
-			predict_end = time.time()
+
 			# bellman iteration for target critic value
 			critic_target = agent.critic.bellman(rewards, q_vals, dones)
 
-			update_start = time.time()
 			# train(or update) the actor & critic and target networks
 			agent.update_networks(states, actions, critic_target)
-			update_end = time.time()
 
 			# grace finish and go to t+1 time
 			obs = new_obs
 			epi_reward = epi_reward + reward
-
-			end_t = time.time()
-
-			print("predict: ",predict_end-predict_start,"sec")
-			print("update_network: ",update_end-update_start,"sec")
-			print("total: ",end_t-start_t,"sec")
 
 			# check if the episode is finished
 			if done or (t == steps-1):
