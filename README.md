@@ -5,32 +5,9 @@ Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl f
 **This project is not totally implemented yet.**
 </br>
 
-## Installation
-
-1. Make an independent environment using `virtualenv`
-```bash
-# install virtualenv module
-sudo apt-get install python3-pip
-sudo pip3 install virtualenv
-
-# create a virtual environment named venv
-virtualenv venv 
-
-# activate the environment
-source venv/bin/activate 
-```
-
-To escape the environment, 
-```bash
-deactivate
-```
-
-2. Install the requirements
-```bash
-pip3 install -r requirements.txt
-```
-
 ![](https://raw.githubusercontent.com/CUN-bjy/WalkYTo-rl-gym/master/img/ant_v1.png)
+
+</br>
 
 ## Experiment Details
 
@@ -50,18 +27,6 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 - layers: 400, 300 for each hidden layer
   </br>
 
-## How to Run
-
-(environment python 3.6)
-
-```python
-python train.py
-```
-
-that's it.
-
-</br>
-
 ## Derectory Structure
 ```
 walkyto-ddpg-keras
@@ -78,6 +43,39 @@ walkyto-ddpg-keras
     ├── noise_process.py
     └── sumtree.py
 ```
+</br>
+
+## Easy Installation
+
+1. Make an independent environment using `virtualenv`
+
+```bash
+# install virtualenv module
+sudo apt-get install python3-pip
+sudo pip3 install virtualenv
+
+# create a virtual environment named venv
+virtualenv venv 
+
+# activate the environment
+source venv/bin/activate 
+```
+
+​	To escape the environment, `deactivate`
+
+2. Install the requirements
+
+```bash
+pip3 install -r requirements.txt
+```
+
+3. Run the training node
+
+```python
+#trainnig
+python3 train.py
+```
+
 </br>
 
 ## Reference
