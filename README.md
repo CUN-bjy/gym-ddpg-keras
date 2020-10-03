@@ -2,12 +2,33 @@
 
 Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
 
-**This project is not totally implemented,yet.**
+**This project is not totally implemented yet.**
 </br>
 
-## Environment
+## Installation
 
-WalkYTo-rl : [link](https://github.com/CUN-bjy/WalkYTo-rl)
+1. Make an independent environment using `virtualenv`
+```bash
+# install virtualenv module
+sudo apt-get install python3-pip
+sudo pip3 install virtualenv
+
+# create a virtual environment named venv
+virtualenv venv 
+
+# activate the environment
+source venv/bin/activate 
+```
+
+To escape the environment, 
+```bash
+deactivate
+```
+
+2. Install the requirements
+```bash
+pip3 install -r requirements.txt
+```
 
 ![](https://raw.githubusercontent.com/CUN-bjy/WalkYTo-rl-gym/master/img/ant_v1.png)
 
