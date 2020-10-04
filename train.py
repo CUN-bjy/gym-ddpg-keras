@@ -37,8 +37,15 @@ BATCH_SIZE = 128
 
 def main():
 	# Create Environments
-	model_ = 'RoboschoolAnt-v1'
-	env = gym.make(model_)
+	models = {	'cheetah':"RoboschoolHalfCheetah-v1",
+				'ant':'RoboschoolAnt-v1',
+				'pong':"RoboschoolPong-v1",
+				'walker':"RoboschoolWalker2d-v1",
+				'hopper':"RoboschoolHopper-v1",
+				'humanoid':"RoboschoolHumanoid-v1",
+				'humanoidflag':"RoboschoolHumanoidFlagrun-v1"}
+	
+	env = gym.make(models['ant'])
 	
 	# Create Agent model
 	agent = ddpgAgent(env)
