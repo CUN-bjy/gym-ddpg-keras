@@ -3,6 +3,9 @@
 Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
 
 **This project is not totally implemented yet.**
+
+[project_link](https://github.com/CUN-bjy/walkyto-ddpg-keras/projects/1)
+
 </br>
 
 ![](https://raw.githubusercontent.com/CUN-bjy/WalkYTo-rl-gym/master/img/ant_v1.png)
@@ -28,14 +31,16 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
   </br>
 
 ## Derectory Structure
-```
+```bash
 walkyto-ddpg-keras
 ├── agent
 │   ├── actor.py
 │   ├── critic.py
 │   ├── ddpg.py
 │   └── __init__.py
+├── env_test.py
 ├── README.md
+├── requirements.txt
 ├── train.py
 └── utils
     ├── __init__.py
