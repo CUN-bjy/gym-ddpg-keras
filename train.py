@@ -23,7 +23,7 @@ SOFTWARE.
 '''
 
 # Implementation of DDPG(Deep Deterministic Policy Gradient) 
-# on WalkYTo-rl framwork
+# on OpenAI gym framwork
 
 
 import roboschool, gym
@@ -96,13 +96,19 @@ def main():
 				if done or (t == steps-1):
 					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
 					if epi%10 == 1:
-						path = os.getcwd()+'/'+'walkyto_ddpg_'
+						dir_path = "%s/weights"%os.getcwd()
+						if not os.path.isdir(dir_path):
+							os.mkdir(dir_path)
+						path = dir_path+'/'+'gym_ddpg_'
 						agent.save_weights(path + 'ep%d'%epi)
 					break;
 	except KeyboardInterrupt as e:
 		print(e)
 	finally:
-		path = os.getcwd()+'/'+'walkyto_ddpg_'
+		dir_path = "%s/weights"%os.getcwd()
+		if not os.path.isdir(dir_path):
+			os.mkdir(dir_path)
+		path = dir_path+'/'+'gym_ddpg_'
 		agent.save_weights(path +'_temp_')
 		env.close()
 
