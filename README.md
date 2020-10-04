@@ -1,10 +1,10 @@
-# walkyto-ddpg-keras
+# gym-ddpg-keras
 
-Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on WalkYTo-rl framwork
+Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on OpenAI gym framwork
 
 **This project is not totally implemented yet.**
 
-[project_link](https://github.com/CUN-bjy/walkyto-ddpg-keras/projects/1)
+[project_link](https://github.com/CUN-bjy/gym-ddpg-keras/projects/1)
 
 </br>
 
@@ -32,7 +32,7 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 
 ## Directory Structure
 ```bash
-walkyto-ddpg-keras
+gym-ddpg-keras
 ├── agent
 │   ├── actor.py
 │   ├── critic.py
