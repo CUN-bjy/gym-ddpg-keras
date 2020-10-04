@@ -30,7 +30,7 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 - layers: 400, 300 for each hidden layer
   </br>
 
-## Derectory Structure
+## Directory Structure
 ```bash
 walkyto-ddpg-keras
 ├── agent
