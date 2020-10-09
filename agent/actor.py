@@ -74,14 +74,11 @@ class ActorNet():
 
 		return Model(input_,out)
 
-	def train(self, obs, acts, critic):
+	def train(self, obs, q_grads):
 		""" training Actor's Weights
 		"""
 		with tf.GradientTape() as tape:
-			actions = self.network(obs)
-			actor_loss = -tf.reduce_mean(critic([obs,actions]))
-		
-		actor_grad = tape.gradient(actor_loss, self.network.trainable_weights)
+			actor_grad = tape.gradient(self.network(obs), self.network.trainable_weights,-q_grads)
 		self.optimizer.apply_gradients(zip(actor_grad,self.network.trainable_weights))
 
 	def target_update(self):

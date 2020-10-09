@@ -84,6 +84,14 @@ class CriticNet():
 				critic_target[i] = rewards[i] + self.discount_factor * q_vals[i]
 		return critic_target
 
+	def Qgradient(self, obs, acts):
+		acts = tf.convert_to_tensor(acts)
+		with tf.GradientTape() as tape:
+			tape.watch(acts)
+			q_values = self.network([obs,acts])
+			q_values = tf.squeeze(q_values)
+		return tape.gradient(q_values, acts)
+
 
 	def train(self, obs, acts, target):
 		"""Train Q-network for critic on sampled batch
@@ -92,10 +100,10 @@ class CriticNet():
 			q_values = self.network([obs, acts])
 			td_error = q_values - target
 			critic_loss = tf.reduce_mean(tf.math.square(td_error))
+			tf.print("critic loss :",critic_loss)
 
 		critic_grad = tape.gradient(critic_loss, self.network.trainable_variables)  # compute critic gradient
 		self.optimizer.apply_gradients(zip(critic_grad, self.network.trainable_variables))
-
 		#return self.network.train_on_batch([obs,acts],target)
 
 	def target_predict(self, new_obs):

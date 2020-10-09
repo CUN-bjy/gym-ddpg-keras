@@ -103,3 +103,5 @@ python3 train.py
 [2] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)
 
 [3] [anita-hu/TF2-RL](https://github.com/anita-hu/TF2-RL)
+
+[4] [marload/DeepRL-TensorFlow2](https://github.com/marload/DeepRL-TensorFlow2)
