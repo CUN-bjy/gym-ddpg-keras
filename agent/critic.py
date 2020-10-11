@@ -57,18 +57,18 @@ class CriticNet():
 		concat = Concatenate(axis=-1)(inputs)
 
 		# hidden layer 1
-		h1_ = Dense(300, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(concat)
-		h1_b = BatchNormalization()(h1_)
+		h1_b = Dense(300)(concat)
+		# h1_b = BatchNormalization()(h1_)
 		h1 = Activation('relu')(h1_b)
 
 		# hidden_layer 2
-		h2_ = Dense(400, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(h1)
-		h2_b = BatchNormalization()(h2_)
+		h2_b = Dense(400)(h1)
+		# h2_b = BatchNormalization()(h2_)
 		h2 = Activation('relu')(h2_b)
 
 		# output layer(actions)
-		output_ = Dense(1, kernel_initializer=GlorotNormal())(h2)
-		output_b = BatchNormalization()(output_)
+		output_b = Dense(1)(h2)
+		# output_b = BatchNormalization()(output_)
 		output = Activation('linear')(output_b)
 
 		return Model(inputs,output)
@@ -81,7 +81,7 @@ class CriticNet():
 			if dones[i]:
 				critic_target[i] = rewards[i]
 			else:
-				critic_target[i] = rewards[i] + self.discount_factor * q_vals[i]
+				critic_target[i] = self.discount_factor * q_vals[i] + rewards[i]
 		return critic_target
 
 	def Qgradient(self, obs, acts):
@@ -92,14 +92,17 @@ class CriticNet():
 			q_values = tf.squeeze(q_values)
 		return tape.gradient(q_values, acts)
 
+	def compute_loss(self,v_pred, v_target):
+		mse = tf.keras.losses.MeanSquaredError()
+		return mse(v_target, v_pred)
+
 
 	def train(self, obs, acts, target):
 		"""Train Q-network for critic on sampled batch
 		"""
 		with tf.GradientTape() as tape:
-			q_values = self.network([obs, acts])
-			td_error = q_values - target
-			critic_loss = tf.reduce_mean(tf.math.square(td_error))
+			q_values = self.network([obs, acts], training=True)
+			critic_loss = self.compute_loss(q_values, tf.stop_gradient(target))
 			tf.print("critic loss :",critic_loss)
 
 		critic_grad = tape.gradient(critic_loss, self.network.trainable_variables)  # compute critic gradient

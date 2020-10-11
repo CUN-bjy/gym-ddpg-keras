@@ -57,18 +57,18 @@ class ActorNet():
 		input_ = Input(shape=(self.obs_dim,))
 
 		# hidden layer 1
-		h1_ = Dense(300, kernel_initializer=GlorotNormal())(input_)
-		h1_b = BatchNormalization()(h1_)
+		h1_b = Dense(300)(input_)
+		# h1_b = BatchNormalization()(h1_)
 		h1 = Activation('relu')(h1_b)
 
 		# hidden_layer 2
-		h2_ = Dense(400, kernel_initializer=GlorotNormal())(h1)
-		h2_b = BatchNormalization()(h2_)
+		h2_b = Dense(400)(h1)
+		# h2_b = BatchNormalization()(h2_)
 		h2 = Activation('relu')(h2_b)
 
 		# output layer(actions)
-		output_ = Dense(self.act_dim, kernel_initializer=GlorotNormal())(h2)
-		output_b = BatchNormalization()(output_)
+		output_b = Dense(self.act_dim)(h2)
+		# output_b = BatchNormalization()(output_)
 		output = Activation('tanh')(output_b)
 		out = Lambda(lambda i: i * self.act_range)(output)
 
@@ -78,8 +78,8 @@ class ActorNet():
 		""" training Actor's Weights
 		"""
 		with tf.GradientTape() as tape:
-			actor_grad = tape.gradient(self.network(obs), self.network.trainable_weights,-q_grads)
-		self.optimizer.apply_gradients(zip(actor_grad,self.network.trainable_weights))
+			actor_grad = tape.gradient(self.network(obs), self.network.trainable_variables,-q_grads)
+		self.optimizer.apply_gradients(zip(actor_grad,self.network.trainable_variables))
 
 	def target_update(self):
 		""" soft target update for training target actor network
