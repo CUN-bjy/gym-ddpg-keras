@@ -48,6 +48,10 @@ class ActorNet():
 		# initialize optimizer
 		self.optimizer = Adam(self.lr)
 
+		# copy the weights for initialization
+		weights_ = self.network.get_weights()
+		self.target_network.set_weights(weights_)
+
 
 	def create_network(self):
 		""" Create a Actor Network Model using Keras

@@ -33,7 +33,6 @@ from tqdm import tqdm
 from agent.ddpg import ddpgAgent
 
 NUM_EPISODES_ = 500
-BATCH_SIZE = 128
 
 def main():
 	# Create Environments
@@ -80,20 +79,9 @@ def main():
 
 				# do step on gym at t-time
 				new_obs, reward, done, info = env.step(action) 
-				
+
 				# store the results to buffer	
 				agent.memorize(obs, action, reward, done, new_obs)
-				# sample from buffer
-				states, actions, rewards, dones, new_states, _ = agent.sample_batch(BATCH_SIZE)
-
-				# get target q-value using target network
-				q_vals = agent.critic.target_predict([new_states,agent.actor.target_predict(new_states)])
-
-				# bellman iteration for target critic value
-				critic_target = agent.critic.bellman(rewards, q_vals, dones)
-
-				# train(or update) the actor & critic and target networks
-				agent.update_networks(states, actions, critic_target)
 
 				# grace finish and go to t+1 time
 				obs = new_obs
@@ -101,6 +89,8 @@ def main():
 
 				# check if the episode is finished
 				if done or (t == steps-1):
+					# Replay
+					agent.replay(10)
 					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
 					if epi%10 == 1:
 						dir_path = "%s/weights"%os.getcwd()
@@ -109,6 +99,7 @@ def main():
 						path = dir_path+'/'+'gym_ddpg_'
 						agent.save_weights(path + 'ep%d'%epi)
 					break;
+
 	except KeyboardInterrupt as e:
 		print(e)
 	finally:

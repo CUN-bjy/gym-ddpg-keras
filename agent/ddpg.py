@@ -30,6 +30,8 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
+BATCH_SIZE = 128
+
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
@@ -65,7 +67,6 @@ class ddpgAgent():
 		# get next action and Q-value Gradient
 		n_actions = self.actor.network.predict(obs)
 		q_grads = self.critic.Qgradient(obs, n_actions)
-		print(q_grads.shape)
 
 		# update actor
 		self.actor.train(obs,q_grads)
@@ -73,6 +74,20 @@ class ddpgAgent():
 		# update target networks
 		self.actor.target_update()
 		self.critic.target_update()
+
+	def replay(self, replay_num_):
+		for _ in range(replay_num_):
+			# sample from buffer
+			states, actions, rewards, dones, new_states, _ = self.sample_batch(BATCH_SIZE)
+
+			# get target q-value using target network
+			q_vals = self.critic.target_predict([new_states,self.actor.target_predict(new_states)])
+
+			# bellman iteration for target critic value
+			critic_target = self.critic.bellman(rewards, q_vals, dones)
+
+			# train(or update) the actor & critic and target networks
+			self.update_networks(states, actions, critic_target)
 
 
 	####################################################

@@ -46,6 +46,10 @@ class CriticNet():
 
 		self.optimizer = Adam(self.lr)
 
+		# copy the weights for initialization
+		weights_ = self.network.get_weights()
+		self.target_network.set_weights(weights_)
+
 	def create_network(self):
 		""" Create a Critic Network Model using Keras
 			as a Q-value approximator function
