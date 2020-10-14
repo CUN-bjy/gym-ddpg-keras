@@ -44,7 +44,7 @@ def main():
 				'humanoid':"RoboschoolHumanoid-v1",
 				'humanoidflag':"RoboschoolHumanoidFlagrun-v1"}
 	
-	env = gym.make(models['cheetah'])
+	env = gym.make(models['ant'])
 	
 	# Create Agent model
 	agent = ddpgAgent(env)

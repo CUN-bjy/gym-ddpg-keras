@@ -35,7 +35,7 @@ BATCH_SIZE = 128
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
-	def __init__(self, env_, buffer_size = 10000):
+	def __init__(self, env_, buffer_size = 20000):
 		# gym environments
 		self.env = env_
 		self.obs_dim = self.env.observation_space.shape[0]
@@ -46,7 +46,7 @@ class ddpgAgent():
 		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=0.99)
 
 		# Experience Buffer
-		self.buffer = MemoryBuffer(buffer_size)
+		self.buffer = MemoryBuffer(buffer_size, with_per=False)
 		# OU-Noise-Process
 		self.noise = OrnsteinUhlenbeckProcess(size=self.act_dim)
 
@@ -66,10 +66,10 @@ class ddpgAgent():
 
 		# get next action and Q-value Gradient
 		n_actions = self.actor.network.predict(obs)
-		q_grads = self.critic.Qgradient(obs, n_actions)
+		q_grads = None#self.critic.Qgradient(obs, n_actions)
 
 		# update actor
-		self.actor.train(obs,q_grads)
+		self.actor.train(obs,self.critic.network,q_grads)
 
 		# update target networks
 		self.actor.target_update()

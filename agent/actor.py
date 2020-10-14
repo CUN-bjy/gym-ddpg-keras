@@ -56,7 +56,6 @@ class ActorNet():
 	def create_network(self):
 		""" Create a Actor Network Model using Keras
 		"""
-
 		# input layer(observations)
 		input_ = Input(shape=(self.obs_dim,))
 
@@ -78,11 +77,14 @@ class ActorNet():
 
 		return Model(input_,out)
 
-	def train(self, obs, q_grads):
+	def train(self, obs, critic, q_grads):
 		""" training Actor's Weights
 		"""
 		with tf.GradientTape() as tape:
-			actor_grad = tape.gradient(self.network(obs), self.network.trainable_variables,-q_grads)
+			actions = self.network(obs)
+			actor_loss = -tf.reduce_mean(critic([obs,actions]))
+			# actor_grad = tape.gradient(self.network(obs), self.network.trainable_variables,-q_grads)
+		actor_grad = tape.gradient(actor_loss,self.network.trainable_variables)
 		self.optimizer.apply_gradients(zip(actor_grad,self.network.trainable_variables))
 
 	def target_update(self):

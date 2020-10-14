@@ -96,22 +96,17 @@ class CriticNet():
 			q_values = tf.squeeze(q_values)
 		return tape.gradient(q_values, acts)
 
-	def compute_loss(self,v_pred, v_target):
-		mse = tf.keras.losses.MeanSquaredError()
-		return mse(v_target, v_pred)
-
-
 	def train(self, obs, acts, target):
 		"""Train Q-network for critic on sampled batch
 		"""
 		with tf.GradientTape() as tape:
 			q_values = self.network([obs, acts], training=True)
-			critic_loss = self.compute_loss(q_values, tf.stop_gradient(target))
+			td_error = q_values - target
+			critic_loss = tf.reduce_mean(tf.math.square(td_error))
 			tf.print("critic loss :",critic_loss)
 
 		critic_grad = tape.gradient(critic_loss, self.network.trainable_variables)  # compute critic gradient
 		self.optimizer.apply_gradients(zip(critic_grad, self.network.trainable_variables))
-		#return self.network.train_on_batch([obs,acts],target)
 
 	def target_predict(self, new_obs):
 		"""Predict Q-value from approximation function(Q-network)
