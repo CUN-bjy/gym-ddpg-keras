@@ -87,6 +87,9 @@ def main():
 				obs = new_obs
 				epi_reward = epi_reward + reward
 
+
+				if t%10 == 0: agent.replay(1)
+
 				# check if the episode is finished
 				if done or (t == steps-1):
 					# Replay
