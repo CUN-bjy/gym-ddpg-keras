@@ -36,7 +36,7 @@ from agent.ddpg import ddpgAgent
 
 NUM_EPISODES_ = 1000
 
-def model_train(pretrained_):
+def model_play(pretrained_):
 	# Create Environments
 	models = {	'cheetah':"RoboschoolHalfCheetah-v1",
 				'ant':'RoboschoolAnt-v1',
@@ -73,48 +73,26 @@ def model_train(pretrained_):
 			actions, states, rewards, dones, new_states = [],[],[],[],[]
 
 			epi_reward = 0
-			for t in tqdm(range(steps)):
+			while True:
 				# environment rendering on Graphics
 				env.render()
 				
 				# Make action from the current policy
-				action_ = agent.make_action(obs)#env.action_space.sample()#
-				action = np.clip(action_ + agent.noise.generate(t), -act_range, act_range)
+				action = agent.make_action(obs)#env.action_space.sample()#
 
 				# do step on gym at t-time
 				new_obs, reward, done, info = env.step(action) 
-
-				# store the results to buffer	
-				agent.memorize(obs, action, reward, done, new_obs)
 
 				# grace finish and go to t+1 time
 				obs = new_obs
 				epi_reward = epi_reward + reward
 
+				if done: break
 
-				if t%100 == 0: agent.replay(1)
-
-				# check if the episode is finished
-				if done or (t == steps-1):
-					# Replay
-					agent.replay(10)
-					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
-					if epi%30 == 0:
-						dir_path = "%s/weights"%os.getcwd()
-						if not os.path.isdir(dir_path):
-							os.mkdir(dir_path)
-						path = dir_path+'/'+'gym_ddpg_'
-						agent.save_weights(path + 'ep%d'%epi)
-					break;
 
 	except KeyboardInterrupt as e:
 		print(e)
 	finally:
-		dir_path = "%s/weights"%os.getcwd()
-		if not os.path.isdir(dir_path):
-			os.mkdir(dir_path)
-		path = dir_path+'/'+'gym_ddpg_'
-		agent.save_weights(path +'_temp_')
 		env.close()
 
 
@@ -133,4 +111,4 @@ if __name__ == '__main__':
 	args = argparser.parse_args()
 	weights_path = args.weights
 	
-	model_train(pretrained_=weights_path)
+	model_play(pretrained_=weights_path)

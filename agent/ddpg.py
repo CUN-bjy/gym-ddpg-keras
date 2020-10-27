@@ -35,7 +35,7 @@ BATCH_SIZE = 5000
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
-	def __init__(self, env_, buffer_size = 20000):
+	def __init__(self, env_, buffer_size = 30000):
 		# gym environments
 		self.env = env_
 		self.obs_dim = self.env.observation_space.shape[0]
