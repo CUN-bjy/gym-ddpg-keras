@@ -30,7 +30,7 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
-BATCH_SIZE = 128
+BATCH_SIZE = 5000
 
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent

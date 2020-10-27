@@ -61,17 +61,17 @@ class CriticNet():
 		concat = Concatenate(axis=-1)(inputs)
 
 		# hidden layer 1
-		h1_ = Dense(300)(concat)
+		h1_ = Dense(300, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(concat)
 		h1_b = BatchNormalization()(h1_)
 		h1 = Activation('relu')(h1_b)
 
 		# hidden_layer 2
-		h2_ = Dense(400)(h1)
+		h2_ = Dense(400, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(h1)
 		h2_b = BatchNormalization()(h2_)
 		h2 = Activation('relu')(h2_b)
 
 		# output layer(actions)
-		output_ = Dense(1)(h2)
+		output_ = Dense(1, kernel_initializer=GlorotNormal(), kernel_regularizer=l2(0.01))(h2)
 		output_b = BatchNormalization()(output_)
 		output = Activation('linear')(output_b)
 

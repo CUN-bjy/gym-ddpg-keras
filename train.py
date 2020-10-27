@@ -88,7 +88,7 @@ def main():
 				epi_reward = epi_reward + reward
 
 
-				if t%10 == 0: agent.replay(1)
+				if t%100 == 0: agent.replay(1)
 
 				# check if the episode is finished
 				if done or (t == steps-1):
