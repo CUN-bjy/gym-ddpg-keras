@@ -55,7 +55,7 @@ def model_train(pretrained_):
 		agent.load_weights(pretrained_)
 
 	# Initialize Environments
-	steps = env._max_episode_steps # steps per episode
+	steps = 500#env._max_episode_steps # steps per episode
 	num_act_ = env.action_space.shape[0]
 	num_obs_ = env.observation_space.shape[0]
 	print("============ENVIRONMENT===============")
@@ -114,7 +114,7 @@ def model_train(pretrained_):
 		if not os.path.isdir(dir_path):
 			os.mkdir(dir_path)
 		path = dir_path+'/'+'gym_ddpg_'
-		agent.save_weights(path +'_temp_')
+		agent.save_weights(path +'temp')
 		env.close()
 
 

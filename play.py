@@ -68,7 +68,6 @@ def model_play(pretrained_):
 	try:
 		act_range = env.action_space.high
 		for epi in range(NUM_EPISODES_):
-			print("=========EPISODE # %d =========="%epi)
 			obs = env.reset()
 			actions, states, rewards, dones, new_states = [],[],[],[],[]
 
