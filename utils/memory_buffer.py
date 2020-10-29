@@ -58,7 +58,7 @@ class MemoryBuffer(object):
 
         # Sample using prorities
         if(self.with_per):
-            T = self.buffer.total() // batch_size
+            T = self.buffer.total() / batch_size
             for i in range(batch_size):
                 a, b = T * i, T * (i + 1)
                 s = random.uniform(a, b)

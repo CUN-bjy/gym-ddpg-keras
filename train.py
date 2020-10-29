@@ -75,7 +75,7 @@ def model_train(pretrained_):
 			epi_reward = 0
 			for t in tqdm(range(steps)):
 				# environment rendering on Graphics
-				env.render()
+				# env.render()
 				
 				# Make action from the current policy
 				action_ = agent.make_action(obs)#env.action_space.sample()#

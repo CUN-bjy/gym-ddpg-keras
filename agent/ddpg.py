@@ -30,7 +30,7 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
-BATCH_SIZE = 2000
+BATCH_SIZE = 128
 
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
@@ -78,6 +78,8 @@ class ddpgAgent():
 		self.critic.target_update()
 
 	def replay(self, replay_num_):
+		if self.buffer.size() <= BATCH_SIZE: return
+
 		for _ in range(replay_num_):
 			# sample from buffer
 			states, actions, rewards, dones, new_states, idx = self.sample_batch(BATCH_SIZE)
