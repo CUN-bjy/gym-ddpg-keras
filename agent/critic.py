@@ -41,8 +41,8 @@ class CriticNet():
 		self.lr = lr_; self.discount_factor=discount_factor;self.tau = tau_
 
 		# initialize critic network and target
-		self.network = self.create_network(); #self.network.compile(Adam(lr=self.lr),'mse')
-		self.target_network = self.create_network(); #self.target_network.compile(Adam(lr=self.lr),'mse')
+		self.network = self.create_network()
+		self.target_network = self.create_network()
 
 		self.optimizer = Adam(self.lr)
 
@@ -77,7 +77,7 @@ class CriticNet():
 
 		return Model(inputs,output)
 
-	def bellman(self, rewards, q_vals, dones):
+	def bellman(self, rewards, q_vals, dones, idx):
 		""" Bellman Equation for q value iteration
 		"""
 		critic_target = np.asarray(q_vals)
@@ -86,6 +86,7 @@ class CriticNet():
 				critic_target[i] = rewards[i]
 			else:
 				critic_target[i] = self.discount_factor * q_vals[i] + rewards[i]
+			
 		return critic_target
 
 	def Qgradient(self, obs, acts):
@@ -108,8 +109,13 @@ class CriticNet():
 		critic_grad = tape.gradient(critic_loss, self.network.trainable_variables)  # compute critic gradient
 		self.optimizer.apply_gradients(zip(critic_grad, self.network.trainable_variables))
 
-	def target_predict(self, new_obs):
+	def predict(self, obs):
 		"""Predict Q-value from approximation function(Q-network)
+		"""
+		return self.network.predict(obs)
+
+	def target_predict(self, new_obs):
+		"""Predict target Q-value from approximation function(Q-network)
 		"""
 		return self.target_network.predict(new_obs)
 

@@ -30,23 +30,25 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
-BATCH_SIZE = 5000
+BATCH_SIZE = 128
 
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
-	def __init__(self, env_, buffer_size = 30000):
+	def __init__(self, env_, buffer_size = 30000, w_per = True):
 		# gym environments
 		self.env = env_
 		self.obs_dim = self.env.observation_space.shape[0]
 		self.act_dim = self.env.action_space.shape[0]
 
 		# initialize actor & critic and its targets
+		self.discount_factor = 0.99
 		self.actor = ActorNet(self.obs_dim, self.act_dim, self.env.action_space.high, lr_=10e-4,tau_=10e-3)
-		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=0.99)
+		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=self.discount_factor)
 
 		# Experience Buffer
-		self.buffer = MemoryBuffer(buffer_size, with_per=False)
+		self.buffer = MemoryBuffer(buffer_size, with_per=w_per)
+		self.with_per = w_per
 		# OU-Noise-Process
 		self.noise = OrnsteinUhlenbeckProcess(size=self.act_dim)
 
@@ -76,15 +78,26 @@ class ddpgAgent():
 		self.critic.target_update()
 
 	def replay(self, replay_num_):
+		if self.buffer.size() <= BATCH_SIZE: return
+
 		for _ in range(replay_num_):
 			# sample from buffer
-			states, actions, rewards, dones, new_states, _ = self.sample_batch(BATCH_SIZE)
+			states, actions, rewards, dones, new_states, idx = self.sample_batch(BATCH_SIZE)
 
 			# get target q-value using target network
 			q_vals = self.critic.target_predict([new_states,self.actor.target_predict(new_states)])
 
 			# bellman iteration for target critic value
-			critic_target = self.critic.bellman(rewards, q_vals, dones)
+			# critic_target = self.critic.bellman(rewards, q_vals, dones, idx)
+			critic_target = np.asarray(q_vals)
+			for i in range(q_vals.shape[0]):
+				if dones[i]:
+					critic_target[i] = rewards[i]
+				else:
+					critic_target[i] = self.discount_factor * q_vals[i] + rewards[i]
+
+				if self.with_per:
+					self.buffer.update(idx[i], abs(q_vals[i]-critic_target[i]))
 
 			# train(or update) the actor & critic and target networks
 			self.update_networks(states, actions, critic_target)
@@ -97,7 +110,16 @@ class ddpgAgent():
 	def memorize(self,obs,act,reward,done,new_obs):
 		"""store experience in the buffer
 		"""
-		self.buffer.memorize(obs,act,reward,done,new_obs)
+		if self.with_per:
+			q_val = self.critic.network([np.expand_dims(obs,axis=0),self.actor.predict(obs)])
+			next_action = self.actor.target_network.predict(np.expand_dims(new_obs, axis=0))
+			q_val_t = self.critic.target_predict([np.expand_dims(new_obs,axis=0), next_action])
+			new_val = reward + self.discount_factor * q_val_t
+			td_error = abs(new_val - q_val)[0]
+		else:
+			td_error = 0			
+
+		self.buffer.memorize(obs,act,reward,done,new_obs,td_error)
 
 	def sample_batch(self, batch_size):
 		""" Sampling from the batch
@@ -113,8 +135,8 @@ class ddpgAgent():
 		self.actor.save_network(path)
 		self.critic.save_network(path)
 
-	def load_weights(self, actor_path, critic_path):
+	def load_weights(self, pretrained):
 		""" Agent's Weights Loader
 		"""
-		self.actor.load_network(actor_path)
-		self.critic.load_network(critic_path)
+		self.actor.load_network(pretrained)
+		self.critic.load_network(pretrained)
