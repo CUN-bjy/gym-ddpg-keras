@@ -49,7 +49,7 @@ def model_train(pretrained_):
 	env = gym.make(models['cheetah'])
 	
 	# Create Agent model
-	agent = ddpgAgent(env)
+	agent = ddpgAgent(env, batch_size=500, w_per=True)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)

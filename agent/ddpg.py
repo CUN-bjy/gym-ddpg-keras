@@ -30,12 +30,11 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
-BATCH_SIZE = 1000
-
+BUFFER_SIZE = 30000
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
-	def __init__(self, env_, buffer_size = 20000, w_per = True):
+	def __init__(self, env_, batch_size = 500, w_per = True):
 		# gym environments
 		self.env = env_
 		self.obs_dim = self.env.observation_space.shape[0]
@@ -47,8 +46,9 @@ class ddpgAgent():
 		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=self.discount_factor)
 
 		# Experience Buffer
-		self.buffer = MemoryBuffer(buffer_size, with_per=w_per)
+		self.buffer = MemoryBuffer(BUFFER_SIZE, with_per=w_per)
 		self.with_per = w_per
+		self.batch_size = batch_size
 		# OU-Noise-Process
 		self.noise = OrnsteinUhlenbeckProcess(size=self.act_dim)
 
@@ -78,11 +78,11 @@ class ddpgAgent():
 		self.critic.target_update()
 
 	def replay(self, replay_num_):
-		if self.buffer.size() <= BATCH_SIZE: return
+		if self.buffer.size() <= self.batch_size: return
 
 		for _ in range(replay_num_):
 			# sample from buffer
-			states, actions, rewards, dones, new_states, idx = self.sample_batch(BATCH_SIZE)
+			states, actions, rewards, dones, new_states, idx = self.sample_batch(self.batch_size)
 
 			# get target q-value using target network
 			q_vals = self.critic.target_predict([new_states,self.actor.target_predict(new_states)])
