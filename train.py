@@ -46,7 +46,7 @@ def model_train(pretrained_):
 				'humanoid':"RoboschoolHumanoid-v1",
 				'humanoidflag':"RoboschoolHumanoidFlagrun-v1"}
 	
-	env = gym.make(models['ant'])
+	env = gym.make(models['cheetah'])
 	
 	# Create Agent model
 	agent = ddpgAgent(env)
@@ -75,7 +75,7 @@ def model_train(pretrained_):
 			epi_reward = 0
 			for t in tqdm(range(steps)):
 				# environment rendering on Graphics
-				# env.render()
+				env.render()
 				
 				# Make action from the current policy
 				action_ = agent.make_action(obs)#env.action_space.sample()#

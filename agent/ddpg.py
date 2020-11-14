@@ -30,12 +30,12 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
-BATCH_SIZE = 128
+BATCH_SIZE = 1000
 
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
-	def __init__(self, env_, buffer_size = 30000, w_per = True):
+	def __init__(self, env_, buffer_size = 20000, w_per = True):
 		# gym environments
 		self.env = env_
 		self.obs_dim = self.env.observation_space.shape[0]
