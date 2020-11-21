@@ -68,7 +68,7 @@ class ddpgAgent():
 
 		# get next action and Q-value Gradient
 		n_actions = self.actor.network.predict(obs)
-		q_grads = None#self.critic.Qgradient(obs, n_actions)
+		q_grads = self.critic.Qgradient(obs, n_actions)
 
 		# update actor
 		self.actor.train(obs,self.critic.network,q_grads)
@@ -78,7 +78,7 @@ class ddpgAgent():
 		self.critic.target_update()
 
 	def replay(self, replay_num_):
-		if self.buffer.size() <= self.batch_size: return
+		if self.with_per and (self.buffer.size() <= self.batch_size): return
 
 		for _ in range(replay_num_):
 			# sample from buffer

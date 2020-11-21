@@ -29,24 +29,21 @@ SOFTWARE.
 import roboschool, gym
 import numpy as np, time, os
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 import argparse
 
 from agent.ddpg import ddpgAgent
 
-NUM_EPISODES_ = 1000
+NUM_EPISODES_ = 3000
 
 def model_train(pretrained_):
 	# Create Environments
 	models = {	'cheetah':"RoboschoolHalfCheetah-v1",
-				'ant':'RoboschoolAnt-v1',
-				'pong':"RoboschoolPong-v1",
 				'walker':"RoboschoolWalker2d-v1",
-				'hopper':"RoboschoolHopper-v1",
-				'humanoid':"RoboschoolHumanoid-v1",
-				'humanoidflag':"RoboschoolHumanoidFlagrun-v1"}
+				'hopper':"RoboschoolHopper-v1"}
 	
-	env = gym.make(models['cheetah'])
+	env = gym.make(models['hopper'])
 	
 	# Create Agent model
 	agent = ddpgAgent(env, batch_size=500, w_per=False)
@@ -65,15 +62,19 @@ def model_train(pretrained_):
 	print("======================================")
 
 
+	logger = dict()
+	plt.ion()
+
 	try:
 		act_range = env.action_space.high
+		rewards = []
 		for epi in range(NUM_EPISODES_):
 			print("=========EPISODE # %d =========="%epi)
 			obs = env.reset()
-			actions, states, rewards, dones, new_states = [],[],[],[],[]
 
 			epi_reward = 0
 			for t in tqdm(range(steps)):
+				plt.pause(0.01)
 				# environment rendering on Graphics
 				env.render()
 				
@@ -92,14 +93,15 @@ def model_train(pretrained_):
 				epi_reward = epi_reward + reward
 
 
-				if t%100 == 0: agent.replay(1)
+				if t%50 == 0: agent.replay(1)
 
 				# check if the episode is finished
 				if done or (t == steps-1):
 					# Replay
 					agent.replay(1)
 					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
-					if epi%30 == 0:
+					rewards.append(epi_reward)
+					if epi%50 == 0:
 						dir_path = "%s/weights"%os.getcwd()
 						if not os.path.isdir(dir_path):
 							os.mkdir(dir_path)
