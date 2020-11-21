@@ -50,6 +50,8 @@ class CriticNet():
 		weights_ = self.network.get_weights()
 		self.target_network.set_weights(weights_)
 
+		self.critic_loss = None
+
 	def create_network(self):
 		""" Create a Critic Network Model using Keras
 			as a Q-value approximator function
@@ -77,18 +79,6 @@ class CriticNet():
 
 		return Model(inputs,output)
 
-	def bellman(self, rewards, q_vals, dones, idx):
-		""" Bellman Equation for q value iteration
-		"""
-		critic_target = np.asarray(q_vals)
-		for i in range(q_vals.shape[0]):
-			if dones[i]:
-				critic_target[i] = rewards[i]
-			else:
-				critic_target[i] = self.discount_factor * q_vals[i] + rewards[i]
-			
-		return critic_target
-
 	def Qgradient(self, obs, acts):
 		acts = tf.convert_to_tensor(acts)
 		with tf.GradientTape() as tape:
@@ -105,6 +95,7 @@ class CriticNet():
 			td_error = q_values - target
 			critic_loss = tf.reduce_mean(tf.math.square(td_error))
 			tf.print("critic loss :",critic_loss)
+			self.critic_loss = float(critic_loss)
 
 		critic_grad = tape.gradient(critic_loss, self.network.trainable_variables)  # compute critic gradient
 		self.optimizer.apply_gradients(zip(critic_grad, self.network.trainable_variables))

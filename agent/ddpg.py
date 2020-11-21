@@ -88,7 +88,6 @@ class ddpgAgent():
 			q_vals = self.critic.target_predict([new_states,self.actor.target_predict(new_states)])
 
 			# bellman iteration for target critic value
-			# critic_target = self.critic.bellman(rewards, q_vals, dones, idx)
 			critic_target = np.asarray(q_vals)
 			for i in range(q_vals.shape[0]):
 				if dones[i]:

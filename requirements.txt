@@ -6,3 +6,5 @@ scipy==1.4.1
 tqdm
 numpy==1.16.0
 matplotlib
+seaborn
+pandas

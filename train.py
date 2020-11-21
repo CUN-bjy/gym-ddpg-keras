@@ -30,12 +30,14 @@ import roboschool, gym
 import numpy as np, time, os
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 
 import argparse
 
 from agent.ddpg import ddpgAgent
 
-NUM_EPISODES_ = 3000
+NUM_EPISODES_ = 5000
 
 def model_train(pretrained_):
 	# Create Environments
@@ -62,12 +64,16 @@ def model_train(pretrained_):
 	print("======================================")
 
 
-	logger = dict()
+	logger = dict(episode=[],reward=[],critic_loss=[])
 	plt.ion()
+	fig1 = plt.figure(1);	fig2 = plt.figure(2)
+	ax1 = fig1.add_subplot(111)
+	ax2 = fig2.add_subplot(111)
+
 
 	try:
 		act_range = env.action_space.high
-		rewards = []
+		rewards = []; critic_losses = []
 		for epi in range(NUM_EPISODES_):
 			print("=========EPISODE # %d =========="%epi)
 			obs = env.reset()
@@ -92,26 +98,36 @@ def model_train(pretrained_):
 				obs = new_obs
 				epi_reward = epi_reward + reward
 
-
 				if t%50 == 0: agent.replay(1)
 
 				# check if the episode is finished
 				if done or (t == steps-1):
-					# Replay
-					agent.replay(1)
 					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
-					rewards.append(epi_reward)
+					agent.replay(1)
+
+					# save weights at every 50 iters
 					if epi%50 == 0:
 						dir_path = "%s/weights"%os.getcwd()
 						if not os.path.isdir(dir_path):
 							os.mkdir(dir_path)
 						path = dir_path+'/'+'gym_ddpg_'
 						agent.save_weights(path + 'ep%d'%epi)
+
+
+					# save reward logs
+					ax1.cla(); ax2.cla();
+					logger['episode'] = range(epi+1)
+					logger['reward'].append(epi_reward)
+					logger['critic_loss'].append(agent.critic.critic_loss)
+
+					df = pd.DataFrame(logger)
+					sns.lineplot(ax=ax1,x='episode',y='reward', data=df)
+					sns.lineplot(ax=ax2,x='episode',y='critic_loss', data=df)
 					break;
 
-	except KeyboardInterrupt as e:
-		print(e)
+	except KeyboardInterrupt as e: print(e)
 	finally:
+		# weight saver
 		dir_path = "%s/weights"%os.getcwd()
 		if not os.path.isdir(dir_path):
 			os.mkdir(dir_path)

@@ -2,13 +2,9 @@
 
 Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on OpenAI gym framwork
 
-**This project is not totally implemented yet.**
+#### Status : IMPLEMENTING!
 
 [project_link](https://github.com/CUN-bjy/gym-ddpg-keras/projects/1)
-
-</br>
-
-![](https://raw.githubusercontent.com/CUN-bjy/WalkYTo-rl-gym/master/img/ant_v1.png)
 
 </br>
 
