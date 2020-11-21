@@ -49,7 +49,7 @@ def model_train(pretrained_):
 	env = gym.make(models['cheetah'])
 	
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=500, w_per=True)
+	agent = ddpgAgent(env, batch_size=500, w_per=False)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
@@ -97,7 +97,7 @@ def model_train(pretrained_):
 				# check if the episode is finished
 				if done or (t == steps-1):
 					# Replay
-					agent.replay(10)
+					agent.replay(1)
 					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
 					if epi%30 == 0:
 						dir_path = "%s/weights"%os.getcwd()
