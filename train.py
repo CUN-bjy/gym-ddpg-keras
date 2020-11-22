@@ -135,6 +135,10 @@ def model_train(pretrained_):
 		agent.save_weights(path +'temp')
 		env.close()
 
+		# log saver
+		import pickle
+		pickle.dump(open(path+'%s.log'%time.Time.now(),'wb'))
+
 
 argparser = argparse.ArgumentParser(
 	description='Train DDPG Agent on the openai gym')
