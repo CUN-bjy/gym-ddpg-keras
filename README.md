@@ -28,13 +28,14 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 
 ## Directory Structure
 ```bash
-gym-ddpg-keras
+gym-ddpg-keras/
 ├── agent
 │   ├── actor.py
 │   ├── critic.py
 │   ├── ddpg.py
 │   └── __init__.py
 ├── env_test.py
+├── play.py
 ├── README.md
 ├── requirements.txt
 ├── train.py
@@ -43,6 +44,7 @@ gym-ddpg-keras
     ├── memory_buffer.py
     ├── noise_process.py
     └── sumtree.py
+
 ```
 </br>
 
