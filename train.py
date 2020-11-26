@@ -48,7 +48,7 @@ def model_train(pretrained_):
 	env = gym.make(models['hopper'])
 	
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=500, w_per=False)
+	agent = ddpgAgent(env, batch_size=500, w_per=True)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
