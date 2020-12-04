@@ -1,6 +1,6 @@
 # gym-ddpg-keras
 
-Keras Implementation of DDPG(Deep Deterministic Policy Gradient) on OpenAI gym framwork
+Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Prioritized Experience Replay) option on OpenAI gym framwork
 
 #### Status : IMPLEMENTING!
 
