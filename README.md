@@ -102,3 +102,4 @@ python3 train.py
 [3] [anita-hu/TF2-RL](https://github.com/anita-hu/TF2-RL)
 [4] [marload/DeepRL-TensorFlow2](https://github.com/marload/DeepRL-TensorFlow2)
 [5] [openai/baselines](https://github.com/openai/baselines)
+[6] [Improving DDPG via Prioritized Experience Replay](https://cardwing.github.io/files/RL_course_report.pdf)
