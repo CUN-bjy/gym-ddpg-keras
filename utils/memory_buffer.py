@@ -12,7 +12,7 @@ class MemoryBuffer(object):
         """ Initialization
         """
         if(with_per):
-            # Prioritized Experience Replay
+            # Prioritized Experience Replay(propositional)
             self.alpha = 0.5
             self.epsilon = 0.01
             self.buffer = SumTree(buffer_size)

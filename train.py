@@ -41,14 +41,15 @@ NUM_EPISODES_ = 20000
 
 def model_train(pretrained_):
 	# Create Environments
-	models = {	'cheetah':"RoboschoolHalfCheetah-v1",
+	models = {	'Pendulum':"RoboschoolInvertedPendulum-v1",
+				'cheetah':"RoboschoolHalfCheetah-v1",
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
-	env = gym.make(models['hopper'])
+	env = gym.make(models['cheetah'])
 	
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=500, w_per=True)
+	agent = ddpgAgent(env, batch_size=100, w_per=False)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
@@ -99,12 +100,12 @@ def model_train(pretrained_):
 				obs = new_obs
 				epi_reward = epi_reward + reward
 
-				if t%50 == 0: agent.replay(1)
+				agent.replay(1)
 
 				# check if the episode is finished
 				if done or (t == steps-1):
 					print("Episode#%d, steps:%d, rewards:%f"%(epi,t,epi_reward))
-					agent.replay(1)
+					# agent.replay(1)
 
 					# save weights at the new records performance
 					if epi_reward > max_reward:
