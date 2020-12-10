@@ -41,12 +41,12 @@ NUM_EPISODES_ = 20000
 
 def model_train(pretrained_):
 	# Create Environments
-	models = {	'Pendulum':"RoboschoolInvertedPendulum-v1",
+	models = {	'pendulum':"RoboschoolInvertedPendulum-v1",
 				'cheetah':"RoboschoolHalfCheetah-v1",
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
-	env = gym.make(models['cheetah'])
+	env = gym.make(models['pendulum'])
 	
 	# Create Agent model
 	agent = ddpgAgent(env, batch_size=100, w_per=False)
