@@ -60,7 +60,6 @@ class CriticNet():
 		input_obs = Input(shape=self.obs_dim)
 		input_act = Input(shape=(self.act_dim,))
 		inputs = [input_obs,input_act]
-		print(inputs)
 		concat = Concatenate(axis=-1)(inputs)
 
 		# hidden layer 1
