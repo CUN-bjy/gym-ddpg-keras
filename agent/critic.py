@@ -57,9 +57,10 @@ class CriticNet():
 			as a Q-value approximator function
 		"""
 		# input layer(observations and actions)
-		input_obs = Input(shape=(self.obs_dim,))
+		input_obs = Input(shape=self.obs_dim)
 		input_act = Input(shape=(self.act_dim,))
 		inputs = [input_obs,input_act]
+		print(inputs)
 		concat = Concatenate(axis=-1)(inputs)
 
 		# hidden layer 1
