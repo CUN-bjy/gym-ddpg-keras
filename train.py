@@ -46,8 +46,8 @@ def model_train(pretrained_):
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
-	# env = gym.make(models['pendulum'])
-	env = gym.make("CartPole-v1")
+	env = gym.make(models['pendulum'])
+	# env = gym.make("CartPole-v1")
 	
 	try:
 		# Ensure action bound is symmetric
@@ -59,7 +59,7 @@ def model_train(pretrained_):
 		print('Discrete Action Space')
 
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=100, w_per=False, is_discrete=is_discrete)
+	agent = ddpgAgent(env, batch_size=100, w_per=True, is_discrete=is_discrete)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
@@ -98,7 +98,7 @@ def model_train(pretrained_):
 				
 				# Make action from the current policy
 				a = agent.make_action(obs, t)#env.action_space.sample()#
-				action = np.argmax(a) if is_discrete else a[0]
+				action = np.argmax(a) if is_discrete else a
 
 				# do step on gym at t-time
 				new_obs, reward, done, info = env.step(action) 
