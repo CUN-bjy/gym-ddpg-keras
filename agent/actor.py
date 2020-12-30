@@ -60,20 +60,15 @@ class ActorNet():
 		input_ = Input(shape=self.obs_dim)
 
 		# hidden layer 1
-		h1_ = Dense(300,kernel_initializer=GlorotNormal())(input_)
-		h1_b = BatchNormalization()(h1_)
-		h1 = Activation('relu')(h1_b)
+		h1 = Dense(300,activation='relu')(input_)
 
 		# hidden_layer 2
-		h2_ = Dense(400,kernel_initializer=GlorotNormal())(h1)
-		h2_b = BatchNormalization()(h2_)
-		h2 = Activation('relu')(h2_b)
+		h2 = Dense(400,activation='relu')(h1)
 
 		# output layer(actions)
-		output_ = Dense(self.act_dim,kernel_initializer=GlorotNormal())(h2)
-		output_b = BatchNormalization()(output_)
-		output = Activation('tanh')(output_b)
-		out = Lambda(lambda i: i * self.act_range)(output)
+		output = Dense(self.act_dim,activation='tanh')(h2)
+		scalar = self.act_range * np.ones(self.act_dim)
+		out = Lambda(lambda i: i * scalar)(output)
 
 		return Model(input_,out)
 
