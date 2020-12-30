@@ -37,7 +37,6 @@ class ddpgAgent():
 	def __init__(self, env_, is_discrete=False, batch_size=100, w_per=True):
 		# gym environments
 		self.env = env_
-
 		self.discrete = is_discrete
 		self.obs_dim = env_.observation_space.shape[0]
 		self.act_dim = env_.action_space.n if is_discrete else env_.action_space.shape[0]
@@ -63,10 +62,9 @@ class ddpgAgent():
 	def make_action(self, obs, t, noise=True):
 		""" predict next action from Actor's Policy
 		"""
-		# obs = np.expand_dims(obs, axis=0).astype(np.float32)
 		action_ = self.actor.predict(obs)[0]
 		a = np.clip(action_ + self.noise.generate(t) if noise else 0, -self.action_bound, self.action_bound)
-		return np.argmax(a) if self.discrete else a
+		return a
 
 	def update_networks(self, obs, acts, critic_target):
 		""" Train actor & critic from sampled experience
@@ -93,9 +91,7 @@ class ddpgAgent():
 			states, actions, rewards, dones, new_states, idx = self.sample_batch(self.batch_size)
 
 			# get target q-value using target network
-			a = self.actor.target_predict(new_states)
-			print(a)
-			q_vals = self.critic.target_predict([new_states,np.argmax(a) if self.discrete else a])
+			q_vals = self.critic.target_predict([new_states,self.actor.target_predict(new_states)])
 
 			# bellman iteration for target critic value
 			critic_target = np.asarray(q_vals)
@@ -120,8 +116,7 @@ class ddpgAgent():
 		"""store experience in the buffer
 		"""
 		if self.with_per:
-			a = self.actor.predict(obs)[0]
-			q_val = self.critic.network([np.expand_dims(obs,axis=0),np.argmax(a) if self.discrete else a])
+			q_val = self.critic.network([np.expand_dims(obs,axis=0),self.actor.predict(obs)])
 			next_action = self.actor.target_network.predict(np.expand_dims(new_obs, axis=0))
 			q_val_t = self.critic.target_predict([np.expand_dims(new_obs,axis=0), next_action])
 			new_val = reward + self.discount_factor * q_val_t

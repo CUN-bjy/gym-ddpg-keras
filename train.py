@@ -45,7 +45,7 @@ def model_train(pretrained_):
 				'cheetah':"RoboschoolHalfCheetah-v1",
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
-
+	
 	# env = gym.make(models['pendulum'])
 	env = gym.make("CartPole-v1")
 	
@@ -97,14 +97,14 @@ def model_train(pretrained_):
 				env.render()
 				
 				# Make action from the current policy
-				action = agent.make_action(obs, t)#env.action_space.sample()#
-				# action = 
+				a = agent.make_action(obs, t)#env.action_space.sample()#
+				action = np.argmax(a) if is_discrete else a[0]
 
 				# do step on gym at t-time
 				new_obs, reward, done, info = env.step(action) 
 
 				# store the results to buffer	
-				agent.memorize(obs, action, reward, done, new_obs)
+				agent.memorize(obs, a, reward, done, new_obs)
 
 				# grace finish and go to t+1 time
 				obs = new_obs
