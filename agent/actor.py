@@ -57,7 +57,7 @@ class ActorNet():
 		""" Create a Actor Network Model using Keras
 		"""
 		# input layer(observations)
-		input_ = Input(shape=(self.obs_dim,))
+		input_ = Input(shape=self.obs_dim)
 
 		# hidden layer 1
 		h1_ = Dense(300,kernel_initializer=GlorotNormal())(input_)
