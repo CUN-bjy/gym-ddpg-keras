@@ -30,19 +30,23 @@ from .critic import CriticNet
 from utils.memory_buffer import MemoryBuffer
 from utils.noise_process import OrnsteinUhlenbeckProcess
 
-BUFFER_SIZE = 30000
+BUFFER_SIZE = 20000
 class ddpgAgent():
 	"""Deep Deterministic Policy Gradient(DDPG) Agent
 	"""
-	def __init__(self, env_, batch_size = 500, w_per = True):
+	def __init__(self, env_, is_discrete=False, batch_size=100, w_per=True):
 		# gym environments
 		self.env = env_
-		self.obs_dim = self.env.observation_space.shape[0]
-		self.act_dim = self.env.action_space.shape[0]
+		self.discrete = is_discrete
+		self.obs_dim = env_.observation_space.shape[0]
+		self.act_dim = env_.action_space.n if is_discrete else env_.action_space.shape[0]
+
+		self.action_bound = (env_.action_space.high - env_.action_space.low) / 2 if not is_discrete else 1.
+		self.action_shift = (env_.action_space.high + env_.action_space.low) / 2 if not is_discrete else 0.
 
 		# initialize actor & critic and its targets
 		self.discount_factor = 0.99
-		self.actor = ActorNet(self.obs_dim, self.act_dim, self.env.action_space.high, lr_=10e-4,tau_=10e-3)
+		self.actor = ActorNet(self.obs_dim, self.act_dim, self.action_bound, lr_=10e-4,tau_=10e-3)
 		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=self.discount_factor)
 
 		# Experience Buffer
@@ -55,10 +59,12 @@ class ddpgAgent():
 	###################################################
 	# Network Related
 	###################################################
-	def make_action(self, obs):
+	def make_action(self, obs, t, noise=True):
 		""" predict next action from Actor's Policy
 		"""
-		return self.actor.predict(obs)[0]
+		action_ = self.actor.predict(obs)[0]
+		a = np.clip(action_ + self.noise.generate(t) if noise else 0, -self.action_bound, self.action_bound)
+		return a
 
 	def update_networks(self, obs, acts, critic_target):
 		""" Train actor & critic from sampled experience

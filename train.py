@@ -46,17 +46,27 @@ def model_train(pretrained_):
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
-	env = gym.make(models['pendulum'])
+	# env = gym.make(models['pendulum'])
+	env = gym.make("CartPole-v1")
 	
+	try:
+		# Ensure action bound is symmetric
+		assert (env.action_space.high == -env.action_space.low)
+		is_discrete = False
+		print('Continuous Action Space')
+	except AttributeError:
+		is_discrete = True
+		print('Discrete Action Space')
+
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=100, w_per=False)
+	agent = ddpgAgent(env, batch_size=100, w_per=False, is_discrete=is_discrete)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
 
 	# Initialize Environments
 	steps = 500#env._max_episode_steps # steps per episode
-	num_act_ = env.action_space.shape[0]
+	num_act_ = env.action_space.n if is_discrete else env.action_space.shape[0]
 	num_obs_ = env.observation_space.shape[0]
 	print("============ENVIRONMENT===============")
 	print("num_of_action_spaces : %d"%num_act_)
@@ -73,7 +83,7 @@ def model_train(pretrained_):
 
 
 	try:
-		act_range = env.action_space.high
+		act_range = (env.action_space.high - env.action_space.low) / 2 if not is_discrete else 1.
 		rewards = []; critic_losses = []
 		max_reward = 0
 		for epi in range(NUM_EPISODES_):
@@ -87,14 +97,14 @@ def model_train(pretrained_):
 				env.render()
 				
 				# Make action from the current policy
-				action_ = agent.make_action(obs)#env.action_space.sample()#
-				action = np.clip(action_ + agent.noise.generate(t), -act_range, act_range)
+				a = agent.make_action(obs, t)#env.action_space.sample()#
+				action = np.argmax(a) if is_discrete else a[0]
 
 				# do step on gym at t-time
 				new_obs, reward, done, info = env.step(action) 
 
 				# store the results to buffer	
-				agent.memorize(obs, action, reward, done, new_obs)
+				agent.memorize(obs, a, reward, done, new_obs)
 
 				# grace finish and go to t+1 time
 				obs = new_obs
