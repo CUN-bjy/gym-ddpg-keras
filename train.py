@@ -59,7 +59,7 @@ def model_train(pretrained_):
 		print('Discrete Action Space')
 
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=100, w_per=True, is_discrete=is_discrete)
+	agent = ddpgAgent(env, batch_size=64, w_per=False, is_discrete=is_discrete)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
