@@ -1,6 +1,6 @@
 # gym-ddpg-keras
 
-Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Prioritized Experience Replay) option on OpenAI gym framwork
+Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Prioritized Experience Replay) option on OpenAI gym framework
 
 #### Status : IMPLEMENTING!
 
@@ -8,14 +8,37 @@ Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Priori
 
 </br>
 
-## Experiment Details
+## Experiments
 
-### **from paper**
+- *CartPole-v1*, [link](https://github.com/CUN-bjy/gym-ddpg-keras/issues/16)
+
+  <img src="./experiments/cartpole/cartpole.gif" width="450"/>
+
+  <img src="./experiments/cartpole/critic_loss 2020-12-31 02-37-17.png" width="350"/><img src="./experiments/cartpole/reward 2020-12-31 02-37-20.png" width="350"/>
+
+- *RoboschoolInvertedPendulum-v1*, [link](https://github.com/CUN-bjy/gym-ddpg-keras/issues/23)
+
+  <img src="./experiments/invertedpendlum/continuous_cartpole 2020-12-31 14-13.gif" width="450"/>
+
+  <img src="./experiments/invertedpendlum/critic_loss 2020-12-31 14-10-51.png" width="350"/><img src="./experiments/invertedpendlum/reward 2020-12-31 14-15-58.png" width="350"/>
+
+  
+
+- *RoboschoolHopper-v1*, [link](https://github.com/CUN-bjy/gym-ddpg-keras/issues/24)
+
+  <img src="./experiments/hopper/hopper5000 2020-12-31 23-53.gif" width="450"/>
+
+  <img src="./experiments/hopper/critic_loss 2021-01-01 00-13-26.png" width="350"/><img src="./experiments/hopper/reward 2021-01-01 00-13-28.png" width="350"/>
+
+  
+
+---
+
+#### Details from paper
 
 We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters with a **learning rate of 10−4 and 10−3** for the actor and critic respectively. For Q we included **L2 weight decay of 10−2** and used a **discount factor of γ = 0.99**. For the soft target updates we used **τ = 0.001**. The neural networks used the **rectified non-linearity (Glorot et al., 2011) for all hidden layers**. The final output layer of the actor was a **tanh** layer, to bound the actions. The low-dimensional networks had 2 hidden layers with **400 and 300** units respectively (≈ 130,000 parameters). Actions were not included until the 2nd hidden layer of Q.
 
-
-### **abstract**
+#### abstract
 
 - optimizer : Adam
 - learning rate: 10-4 ~ 10-3
@@ -25,28 +48,6 @@ We used **Adam** (Kingma & Ba, 2014) for learning the neural network parameters 
 - activation : ReLU(for hidden layer), tanh(for output layer)
 - layers: 400, 300 for each hidden layer
   </br>
-
-## Directory Structure
-```bash
-gym-ddpg-keras/
-├── agent
-│   ├── actor.py
-│   ├── critic.py
-│   ├── ddpg.py
-│   └── __init__.py
-├── env_test.py
-├── play.py
-├── README.md
-├── requirements.txt
-├── train.py
-└── utils
-    ├── __init__.py
-    ├── memory_buffer.py
-    ├── noise_process.py
-    └── sumtree.py
-
-```
-</br>
 
 ## Easy Installation
 
@@ -69,21 +70,21 @@ source venv/bin/activate
 2. Install the requirements
 
 ```bash
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 3. Run the training node
 
 ```python
 #trainnig
-python3 train.py
+python train.py
 ```
 
 </br>
 
 ## Reference
 
-[1]
+[1] *Continuous control with deep reinforcement learning*
 
 ```
 @misc{lillicrap2015continuous,
@@ -99,7 +100,11 @@ python3 train.py
 [review_page](https://github.com/CUN-bjy/pg-paper-review/blob/master/reviews/DDPG.md) | [paper_link](https://arxiv.org/pdf/1509.02971.pdf)
 
 [2] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)
+
 [3] [anita-hu/TF2-RL](https://github.com/anita-hu/TF2-RL)
+
 [4] [marload/DeepRL-TensorFlow2](https://github.com/marload/DeepRL-TensorFlow2)
+
 [5] [openai/baselines](https://github.com/openai/baselines)
+
 [6] [Improving DDPG via Prioritized Experience Replay](https://cardwing.github.io/files/RL_course_report.pdf)
