@@ -46,8 +46,8 @@ class ddpgAgent():
 
 		# initialize actor & critic and its targets
 		self.discount_factor = 0.99
-		self.actor = ActorNet(self.obs_dim, self.act_dim, self.action_bound, lr_=10e-4,tau_=10e-3)
-		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=10e-3,tau_=10e-3,discount_factor=self.discount_factor)
+		self.actor = ActorNet(self.obs_dim, self.act_dim, self.action_bound, lr_=1e-4,tau_=1e-3)
+		self.critic = CriticNet(self.obs_dim, self.act_dim, lr_=1e-3,tau_=1e-3,discount_factor=self.discount_factor)
 
 		# Experience Buffer
 		self.buffer = MemoryBuffer(BUFFER_SIZE, with_per=w_per)

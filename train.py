@@ -46,8 +46,8 @@ def model_train(pretrained_):
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
-	# env = gym.make(models['pendulum'])
-	env = gym.make("CartPole-v1")
+	env = gym.make(models['pendulum'])
+	# env = gym.make("CartPole-v1")
 	
 	try:
 		# Ensure action bound is symmetric
@@ -118,7 +118,7 @@ def model_train(pretrained_):
 					# agent.replay(1)
 
 					# save weights at the new records performance
-					if epi_reward > max_reward:
+					if epi_reward >= max_reward:
 						max_reward = epi_reward
 						dir_path = "%s/weights"%os.getcwd()
 						if not os.path.isdir(dir_path):
