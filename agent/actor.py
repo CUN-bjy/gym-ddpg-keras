@@ -60,12 +60,12 @@ class ActorNet():
 		input_ = Input(shape=self.obs_dim)
 
 		# hidden layer 1
-		h1_ = Dense(24,kernel_initializer=GlorotNormal())(input_)
+		h1_ = Dense(300,kernel_initializer=GlorotNormal())(input_)
 		h1_b = BatchNormalization()(h1_)
 		h1 = Activation('relu')(h1_b)
 
 		# hidden_layer 2
-		h2_ = Dense(16,kernel_initializer=GlorotNormal())(h1)
+		h2_ = Dense(400,kernel_initializer=GlorotNormal())(h1)
 		h2_b = BatchNormalization()(h2_)
 		h2 = Activation('relu')(h2_b)
 

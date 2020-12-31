@@ -46,12 +46,12 @@ def model_train(pretrained_):
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
-	env = gym.make(models['pendulum'])
+	env = gym.make(models['hopper'])
 	# env = gym.make("CartPole-v1")
 	
 	try:
 		# Ensure action bound is symmetric
-		assert (env.action_space.high == -env.action_space.low)
+		assert (np.all(env.action_space.high+env.action_space.low) == 0)
 		is_discrete = False
 		print('Continuous Action Space')
 	except AttributeError:
@@ -59,7 +59,7 @@ def model_train(pretrained_):
 		print('Discrete Action Space')
 
 	# Create Agent model
-	agent = ddpgAgent(env, batch_size=64, w_per=False, is_discrete=is_discrete)
+	agent = ddpgAgent(env, batch_size=128, w_per=False, is_discrete=is_discrete)
 
 	if not pretrained_ == None:
 		agent.load_weights(pretrained_)
