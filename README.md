@@ -4,19 +4,19 @@ Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Priori
 
 #### Status : IMPLEMENTING!
 
-[project_link](https://github.com/CUN-bjy/gym-ddpg-keras/projects/1)
+[`PROJECT LINK`](https://github.com/CUN-bjy/gym-ddpg-keras/projects/1)
 
 </br>
 
 ## Experiments
 
-- *CartPole-v1*, [link](https://github.com/CUN-bjy/gym-ddpg-keras/issues/16)
+- *CartPole-v1*, [`link`](https://github.com/CUN-bjy/gym-ddpg-keras/issues/16)
 
   <img src="./experiments/cartpole/cartpole.gif" width="450"/>
 
   <img src="./experiments/cartpole/critic_loss 2020-12-31 02-37-17.png" width="350"/><img src="./experiments/cartpole/reward 2020-12-31 02-37-20.png" width="350"/>
 
-- *RoboschoolInvertedPendulum-v1*, [link](https://github.com/CUN-bjy/gym-ddpg-keras/issues/23)
+- *RoboschoolInvertedPendulum-v1*, [`link`](https://github.com/CUN-bjy/gym-ddpg-keras/issues/23)
 
   <img src="./experiments/invertedpendlum/continuous_cartpole 2020-12-31 14-13.gif" width="450"/>
 
@@ -24,7 +24,7 @@ Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Priori
 
   
 
-- *RoboschoolHopper-v1*, [link](https://github.com/CUN-bjy/gym-ddpg-keras/issues/24)
+- *RoboschoolHopper-v1*, [`link`](https://github.com/CUN-bjy/gym-ddpg-keras/issues/24)
 
   <img src="./experiments/hopper/hopper5000 2020-12-31 23-53.gif" width="450"/>
 
@@ -97,7 +97,7 @@ python train.py
 }
 ```
 
-[review_page](https://github.com/CUN-bjy/pg-paper-review/blob/master/reviews/DDPG.md) | [paper_link](https://arxiv.org/pdf/1509.02971.pdf)
+[`REVIEW`](https://github.com/CUN-bjy/rl-paper-review/blob/master/reviews/DDPG.md) | [`PAPER`](https://arxiv.org/pdf/1509.02971.pdf)
 
 [2] [germain-hug/Deep-RL-Keras](https://github.com/germain-hug/Deep-RL-Keras)
 
