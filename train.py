@@ -41,13 +41,13 @@ NUM_EPISODES_ = 20000
 
 def model_train(pretrained_):
 	# Create Environments
-	models = {	'pendulum':"RoboschoolInvertedPendulum-v1",
+	models = {	'cartpole':"CartPole-v1",
+				'pendulum':"RoboschoolInvertedPendulum-v1",
 				'cheetah':"RoboschoolHalfCheetah-v1",
 				'walker':"RoboschoolWalker2d-v1",
 				'hopper':"RoboschoolHopper-v1"}
 	
 	env = gym.make(models['hopper'])
-	# env = gym.make("CartPole-v1")
 	
 	try:
 		# Ensure action bound is symmetric
