@@ -2,9 +2,9 @@
 
 Keras Implementation of DDPG(Deep Deterministic Policy Gradient) with PER(Prioritized Experience Replay) option on OpenAI gym framework
 
-#### Status : IMPLEMENTING!
+#### Status : [`IMPLEMENTING`](https://github.com/CUN-bjy/gym-ddpg-keras/projects/1)
 
-[`PROJECT LINK`](https://github.com/CUN-bjy/gym-ddpg-keras/projects/1)
+Extended Work : [`gym-td3-keras`](https://github.com/CUN-bjy/gym-td3-keras)(TD3)
 
 </br>
 
