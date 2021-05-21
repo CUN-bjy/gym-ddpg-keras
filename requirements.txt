@@ -1,6 +1,6 @@
 gym==0.15.4
 roboschool==1.0.48
-tensorflow==2.2.1
+tensorflow==2.5.0
 keras==2.4.3
 scipy==1.4.1
 tqdm
