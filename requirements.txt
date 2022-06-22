@@ -4,7 +4,7 @@ tensorflow==2.7.2
 keras==2.4.3
 scipy==1.4.1
 tqdm
-numpy==1.21.0
+numpy==1.22.0
 matplotlib
 seaborn
 pandas
